@@ -50,31 +50,31 @@ TE="0.1"
 PE_DIRECTION="1"
 
 
-# Get Local Directory
+# Fetch file directory as Variable
 LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Assign local folders for processing
+########################
+# Local Folders for Processing
 
-# Diffusion
-NII_RAW_DIR="${LOCAL_DIR}/nifti_raw/"
+# Diffusion Data Folder Variables
 DIFF_DIR="${LOCAL_DIR}/diff/"
-REORIENT_DIR="${DIFF_DIR}/mni_reorient_check/"
 DIFF_DATA_DIR="${DIFF_DIR}/data/"
+DIFF_DATA_N4_DIR="${DIFF_DIR}/data_N4/"
+DIFF_DATA_RELEASE_DIR="${DIFF_DIR}/data_release/"
+DIFF_DATA_NORM_RELEASE_DIR="${DIFF_DIR}/data_release_norm/"
+DTI_DIR=${DIFF_DIR}/dti
 EDDY_DIR="${DIFF_DIR}/eddy/"
 EDDY_FIELDS_DIR="${DIFF_DIR}/eddy_fields/"
 EDDY_FIELDS_REL_DIR="${DIFF_DIR}/eddy_fields_rel/"
 EDDY_FIELDS_JAC_DIR="${DIFF_DIR}/eddy_fields_jac/"
-TOPUP_DIR="${DIFF_DIR}/topup/"
+NII_RAW_DIR="${LOCAL_DIR}/nifti_raw/"
 NOISEMAP_DIR="${DIFF_DIR}/noisemap/"
-DIFF_DATA_N4_DIR="${DIFF_DIR}/data_N4/"
+REORIENT_DIR="${DIFF_DIR}/mni_reorient_check/"
 SPLIT_DIR=${DIFF_DATA_DIR}/split/
 SPLIT_WARPED_DIR=${DIFF_DATA_DIR}/split_warped/
-DTI_DIR=${DIFF_DIR}/dti
-DIFF_DATA_RELEASE_DIR="${DIFF_DIR}/data_release/"
-DIFF_DATA_NORM_RELEASE_DIR="${DIFF_DIR}/data_release_norm/"
+TOPUP_DIR="${DIFF_DIR}/topup/"
 
-
-# FLASH
+# FLASH Data Folder Variables
 FLASH_DIR="${LOCAL_DIR}/flash/"
 FLASH_DIR_FA05="${FLASH_DIR}/FA05/"
 FLASH_DIR_FA12p5="${FLASH_DIR}/FA12p5/"
@@ -83,7 +83,7 @@ FLASH_DIR_FA50="${FLASH_DIR}/FA50/"
 FLASH_DIR_FA80="${FLASH_DIR}/FA80/"
 FLASH_DIR_HIGHRES="${FLASH_DIR}/HIGHRES/"
 
-
+########################
 # Set Scripts and Software Folders
 SCRIPTS=/data/pt_02101_dMRI/scripts/
 SOFTWARE=/data/pt_02101_dMRI/software/
@@ -91,5 +91,6 @@ FSL_LOCAL=/data/pt_02101_dMRI/software/fsl6/bin/
 CONFIG_DIR=/data/pt_02101_dMRI/config/
 EDDY_PATH=/data/pt_02101_dMRI/software/eddy/eddy_openmp
 
+########################
 # Load Local CONDA Environment
 eval "$(/data/pt_02101_dMRI/software/anaconda3/bin/conda shell.bash hook)"
