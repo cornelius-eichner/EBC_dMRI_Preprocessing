@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Load Local Variables
+source ./SET_VARIABLES.sh
+
+# Make Diffusion Folders
+mkdir -p \
+	${NII_RAW_DIR} \
+	${DIFF_DIR} \
+	${DIFF_DATA_DIR} \
+	${DIFF_DATA_N4_DIR} \
+	${DIFF_DATA_NORM_DIR} \
+	${TOPUP_DIR} \
+	${REORIENT_DIR} \
+	${NOISEMAP_DIR} \
+	${EDDY_DIR} \
+	${EDDY_FIELDS_DIR} \
+	${EDDY_FIELDS_REL_DIR} \
+	${EDDY_FIELDS_JAC_DIR} \
+	${SPLIT_DIR} \
+	${SPLIT_WARPED_DIR} \
+	${DTI_DIR} \
+	${DIFF_DATA_RELEASE_DIR} \
+	${DIFF_DATA_NORM_RELEASE_DIR}
+
+
+# Make FLASH FOLDERS
+mkdir -p  \
+	${FLASH_DIR} \
+	${FLASH_DIR_FA05} \
+	${FLASH_DIR_FA12p5} \
+	${FLASH_DIR_FA25} \
+	${FLASH_DIR_FA50} \
+	${FLASH_DIR_FA80} \
+	${FLASH_DIR_HIGHRES}
