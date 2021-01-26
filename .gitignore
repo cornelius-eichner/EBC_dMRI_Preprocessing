@@ -5,3 +5,6 @@ nifti_raw/
 
 # Ignore Supplementary Files
 temp_corr_index.txt
+
+# Ignore EBC Logo File
+EBC_Logo.jpg
