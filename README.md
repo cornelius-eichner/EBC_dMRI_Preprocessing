@@ -1,1 +1,1 @@
-# EBC_DMRI_PREPROCESSING
+# EBC dMRI Preprocessing
