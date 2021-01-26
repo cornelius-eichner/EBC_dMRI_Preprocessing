@@ -17,6 +17,7 @@ Scripted processing of the post-mortem chimpanzee diffusion MRI (dMRI) dataset a
 - MRTRIX
 - ANTS
 - Python 3 incl Numpy, Nibabel, SciPy, DiPy
+- Bru2Nii for Bruker Data Conversion
 
 ## How to Use
 - All processing variables can be modified in the 'SET_VARIABLES.sh' file.
