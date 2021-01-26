@@ -1,0 +1,7 @@
+# Ignore MRI Data 
+diff/
+flash/
+nifti_raw/
+
+# Ignore Supplementary Files
+temp_corr_index.txt

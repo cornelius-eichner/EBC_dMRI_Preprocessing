@@ -10,6 +10,6 @@ source ./SET_VARIABLES.sh
 for Scan in ${BRUKER_RAW_DIR}/*/; do
 	if test -f "${Scan}/acqp"; then
 	    echo "Scanning File $Scan";
-	    python3 ${SCRIPTS}/Bruker/print_scan_name.py "${Scan}/acqp" >> SCANLIST.txt
+	    python3 ${SCRIPTS}/print_scan_name.py "${Scan}/acqp" >> SCANLIST.txt
 	fi
 done

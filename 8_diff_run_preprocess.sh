@@ -117,7 +117,7 @@ mrview ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
 	-interpolation 0 & 
 
 # Find THRESHOLD VALUE in a histogram
-python3 ${SOFTWARE}/quickviz/quickviz.py --his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz --loghis
+python3 ${SCRIPTS}/quickviz.py --his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz --loghis
 
 # Update mask threshold variable
 source ./SET_VARIABLES.sh
