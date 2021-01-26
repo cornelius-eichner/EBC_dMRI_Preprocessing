@@ -1,7 +1,7 @@
 # EBC Diffusion MRI Preprocessing
 Scripted processing of the post-mortem chimpanzee diffusion MRI (dMRI) dataset acquired within the framework of the Evolution of Brain Connectivity (EBC) project. 
 
-![EBC Project Logo](EBC_Logo.jpg?raw=true "Title")
+![EBC Project Logo](EBC_Logo.jpg =250x)
 
 
 ## Input
