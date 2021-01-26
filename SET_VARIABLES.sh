@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # This file needs to be copied in the preprocessing folder of each respective subject. Potential changes in processing should be made in this folder.
 
 # Folder of Bruker Data in Bruker Format
