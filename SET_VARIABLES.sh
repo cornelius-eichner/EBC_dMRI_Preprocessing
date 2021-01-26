@@ -86,7 +86,7 @@ FLASH_DIR_HIGHRES="${FLASH_DIR}/HIGHRES/"
 
 ########################
 # Set Scripts and Software Folders
-SCRIPTS=/data/pt_02101_dMRI/scripts/
+SCRIPTS=${LOCAL_DIR}/scripts/
 SOFTWARE=/data/pt_02101_dMRI/software/
 FSL_LOCAL=/data/pt_02101_dMRI/software/fsl6/bin/
 CONFIG_DIR=/data/pt_02101_dMRI/config/
