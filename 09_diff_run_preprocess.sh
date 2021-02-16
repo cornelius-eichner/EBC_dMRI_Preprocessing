@@ -133,12 +133,20 @@ python3 ${SCRIPTS}/make_fake_eddy_files.py \
 	--TE ${TE} \
 	--PE ${PE_DIRECTION}
 
-# N4 Bias Correction of Diffusion Data
+# Estimate N4 Bias Correction of Median B0 Data
 N4BiasFieldCorrection \
-	-i ${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
-	-o ${DIFF_DATA_N4_DIR}/data_N4.nii.gz \
-	-d 4 \
+	-i ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+	-x ${DIFF_DATA_DIR}/mask.nii.gz \
+	-o [${DIFF_DATA_DIR}/data_b0s_mc_N4.nii.gz,${DIFF_DATA_DIR}/data_b0s_mc_N4_biasfield.nii.gz] \
+	-d 3 \
 	-v 
+
+# Apply bias field correction to entire dMRI dataset
+${FSL_LOCAL}/fslmaths \
+	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+	-div ${DIFF_DATA_DIR}/data_b0s_mc_N4_biasfield.nii.gz \
+	${DIFF_DATA_N4_DIR}/data_N4.nii.gz \
+	-odt float
 
 # Run Eddy on N4 Corrected data
 ${EDDY_PATH} \

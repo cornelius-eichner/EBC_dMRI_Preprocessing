@@ -131,7 +131,7 @@ source ./SET_VARIABLES.sh
 
 # Generate mask by thresholing the b0 volumes (FLS maths)
 ${FSL_LOCAL}/fslmaths \
-	${DIFF_DATA_DIR}/data_b0s_mc.nii.gz \
+	${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
 	-Tmean \
 	-kernel 3d \
 	-fmedian \
