@@ -18,6 +18,9 @@ def buildArgsParser():
 
     p.add_argument('--mask', metavar='',
                              help='Path to a binary mask (nifti format)')
+    
+    p.add_argument('--bvals', dest='bvals', action='store', type=str,
+                             help='Path to a bvals file')
 
     return p
 
@@ -39,6 +42,9 @@ def main():
     else:
         mask = nib.load(args.mask).get_fdata().astype(np.bool)
 
+    bvals = np.genfromtxt(args.bvals)
+    b0s = bvals<100 # b0 mask
+
     # Casting data as float
     data = data.astype(np.float)
     print('Data shape is {}'.format(data.shape))
@@ -49,15 +55,24 @@ def main():
         print('Data and mask dimensions do not match, terminating')
         return 0
 
-    data_mean = data[mask,:].mean(axis = 0) # Calculate the mean time sigal within the mask 
+    data_mean = (data[mask,:].mean(axis = 0))  # Calculate the mean time sigal within the mask 
+    data_mean /= data_mean[b0s].mean() # normalize with mean b0 intensity
 
     # Plot timeseries
-    plt.figure()
-    plt.plot(data_mean)
-    plt.grid('minor')
-    plt.title('Mean Signal Across Time')
-    plt.xlabel('Volume')
-    plt.ylabel('Signal')
+    fig, axs = plt.subplots(2)
+    fig.suptitle('Mean Signal Across Time')
+    axs[0].plot(data_mean, label = 'Full signal')
+    axs[0].grid('minor')
+    axs[0].set_title('Full signal')
+    axs[0].set_xlabel('Volume')
+    axs[0].set_ylabel('Signal')
+
+    axs[1].plot(data_mean[np.logical_not(b0s)], label = 'Signal without b0 volumes')    
+    axs[1].grid('minor')
+    axs[1].set_title('Signal Excluding b0 Volumes')
+    axs[1].set_xlabel('Volume')
+    axs[1].set_ylabel('Signal')
+    
     plt.show()
 
 if __name__ == '__main__':

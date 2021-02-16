@@ -60,7 +60,7 @@ def main():
     sigma_array = np.swapaxes(sigma_array, 0,1)
 
     print("Debiasing Data")
-    data_debias = np.sqrt(data**2 - sigma_array[..., None]**2)
+    data_debias = np.sqrt(np.abs(data**2 - sigma_array[..., None]**2))
 
     data_debias[np.isnan(np.abs(data_debias))] = 0
     data_debias[np.isinf(np.abs(data_debias))] = 0

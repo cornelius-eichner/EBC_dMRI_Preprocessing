@@ -175,7 +175,8 @@ mv -f ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz ${DIFF_DATA_DIR}/mask.nii.gz
 
 python3 ${SCRIPTS}/plot_timeseries.py \
 	--in ${DIFF_DATA_DIR}/data.nii.gz \
-	--mask ${DIFF_DATA_DIR}/mask.nii.gz
+	--mask ${DIFF_DATA_DIR}/mask.nii.gz \
+	--bvals ${DIFF_DATA_DIR}/data.bval
 
 #
 ##################
