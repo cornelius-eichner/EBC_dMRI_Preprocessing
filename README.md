@@ -16,7 +16,7 @@ Scripted processing of the post-mortem chimpanzee diffusion MRI (dMRI) dataset a
 - FSL incl eddy_cuda
 - MRTRIX
 - ANTS
-- Python 3 incl Numpy, Nibabel, SciPy, DiPy
+- Python 3 incl Numpy, Nibabel, SciPy, DiPy, [autodmri>=0.2.4](https://pypi.org/project/autodmri/)
 - Bru2Nii for Bruker Data Conversion
 
 ## How to Use
