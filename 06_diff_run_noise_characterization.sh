@@ -32,6 +32,7 @@ get_distribution ${NOISEMAP_DIR}/noisemap.nii.gz \
 				 ${NOISEMAP_DIR}/Ns.nii.gz \
 				 ${NOISEMAP_DIR}/noise_mask.nii.gz \
 				 -a 1 \
+				 --noise_maps \
 				 --ncores 1 \
 				 -m moments
 
