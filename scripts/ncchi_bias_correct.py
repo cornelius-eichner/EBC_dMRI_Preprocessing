@@ -54,11 +54,11 @@ def main():
     
     
     print('Loading Sigma {}'.format(PATH_SIG))
-    sigma = np.genfromtxt(PATH_SIG)
+    sigma = nib.load(PATH_SIG).get_fdata().astype(np.float)
     print('Sigma Dimensions {}'.format(sigma.shape))
 
     print('Loading N {}'.format(PATH_N))
-    N = np.genfromtxt(PATH_N)
+    N = nib.load(PATH_N).get_fdata().astype(np.float)
     print('N Dimensions {}'.format(N.shape))
 
 
@@ -71,15 +71,15 @@ def main():
     # we build broadcast_idx == (None, slice(0, None), None)
     # which act on the data the same as [None, :, None]
     # which then "repeat" the data in the "None" axis
-    broadcast_idx = (None,)*3
+    broadcast_idx = [None]*3
     for i in set([0,1,2]).difference(set(AXES)):
         broadcast_idx[i] = slice(0, None)
 
     sigma_array = np.zeros_like(sigma)
-    sigma_array[:,:,:] = mean_sigma_along_axes[broadcast_idx]
+    sigma_array[:,:,:] = mean_sigma_along_axes[tuple(broadcast_idx)]
 
     N_array = np.zeros_like(N)
-    N_array[:,:,:] = mean_N_along_axes[broadcast_idx]
+    N_array[:,:,:] = mean_N_along_axes[tuple(broadcast_idx)]
 
 
     print("Debiasing Data")
