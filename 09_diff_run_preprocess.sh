@@ -10,11 +10,17 @@ source ./SET_VARIABLES.sh
 echo 'MP PCA Denoising'
 
 # Noise Debiasing with Noisemap acquisition
-python3 ${SCRIPTS}/rician_bias_correct.py \
+python3 ${SCRIPTS}/ncchi_bias_correct.py \
 	--in ${DIFF_DATA_DIR}/data.nii.gz \
-	--sig ${NOISEMAP_DIR}/sigma_variation.txt \
+	--sig ${NOISEMAP_DIR}/sigmas.nii.gz \
+	--N ${NOISEMAP_DIR}/Ns.nii.gz \
 	--axes 0,2 \
 	--out ${DIFF_DATA_DIR}/data_debias.nii.gz
+
+
+
+
+
 
 ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data.nii.gz \
 	-sub ${DIFF_DATA_DIR}/data_debias.nii.gz \

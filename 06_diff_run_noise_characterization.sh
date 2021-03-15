@@ -27,9 +27,13 @@ ${FSL_LOCAL}/fslmaths ${NOISEMAP_DIR}/noisemap_unscaled.nii.gz \
 
 
 ####################################
-# Exclude "Patches of Signal" from the noise analysis
-python3 ${SCRIPTS}/sigma_along_axes.py \
-	--in ${NOISEMAP_DIR}/noisemap.nii.gz \
-	--out ${NOISEMAP_DIR}/sigma_variation.txt \
-	--axes 0,2
+get_distribution ${NOISEMAP_DIR}/noisemap.nii.gz \
+				 ${NOISEMAP_DIR}/sigmas.nii.gz \
+				 ${NOISEMAP_DIR}/Ns.nii.gz \
+				 ${NOISEMAP_DIR}/noise_mask.nii.gz \
+				 -a 1 \
+				 --noise_maps \
+				 --ncores 1 \
+				 -m moments
+
 
