@@ -129,10 +129,6 @@ MASKING_ANSWER="N"
 MASKING_DONE="N"
 while [ "$MASKING_DONE" == "N" ]; do
 
-	# Find THRESHOLD VALUE in a histogram
-	echo 'Adapt MASK_THRESHOLD Variable in SET_VARIABLES.sh to exclude noise peak in histogram'
-	python3 ${SCRIPTS}/quickviz.py --his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz --loghis
-
 	# Generate mask by thresholing the b0 volumes (FLS maths)
 	${FSL_LOCAL}/fslmaths \
 		${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
@@ -171,9 +167,23 @@ while [ "$MASKING_DONE" == "N" ]; do
 
 	if [ $MASKING_ANSWER == "N" ]
 	then
-	echo "Repeating procedure with new threshold" ${THRESHOLD}
+	# Find THRESHOLD VALUE in a histogram
+	echo 'Adapt MASK_THRESHOLD Variable in SET_VARIABLES.sh to exclude noise peak in histogram'
+	python3 ${SCRIPTS}/quickviz.py \
+		--his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+		--loghis 
+
+	THRS_OLD=$MASK_THRESHOLD # Saving old threshold in variable for replacement in SET_VARIABLES.txt
+
 	echo 'Please provide mask threshold:'
 	read MASK_THRESHOLD
+	echo "Repeating procedure with new threshold" ${MASK_THRESHOLD}
+
+	# Saving mask string in set variables file
+	THRS_STR_OLD="MASK_THRESHOLD=$THRS_OLD"
+	THRS_STR_NEW="MASK_THRESHOLD=$MASK_THRESHOLD"
+
+	sed -i "s/$THRS_STR_OLD/$THRS_STR_NEW/gi" ./SET_VARIABLES.sh
 
 	
 	elif [ $MASKING_ANSWER == "Y" ]
@@ -182,6 +192,7 @@ while [ "$MASKING_DONE" == "N" ]; do
 
 	else 
 	echo "Invalid answer, please repeat"
+
 
 	fi 
 
