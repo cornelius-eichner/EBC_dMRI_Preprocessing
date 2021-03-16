@@ -5,8 +5,8 @@ source ./SET_VARIABLES.sh
 
 # Copy nii files to topup directory
 echo "Copy nii files to topup directory"
-cp ${NII_RAW_DIR}/*${TOPUP_LR_RUN}P1.nii.gz ${TOPUP_DIR}/data_LR.nii.gz
-cp ${NII_RAW_DIR}/*${TOPUP_RL_RUN}P1.nii.gz ${TOPUP_DIR}/data_RL.nii.gz
+cp ${NII_RAW_DIR}/*X${TOPUP_LR_RUN}P1.nii.gz ${TOPUP_DIR}/data_LR.nii.gz
+cp ${NII_RAW_DIR}/*X${TOPUP_RL_RUN}P1.nii.gz ${TOPUP_DIR}/data_RL.nii.gz
 
 # Reshape image matrix to resemble MNI space
 echo "Reshape image matrix to resemble MNI space"
@@ -65,3 +65,4 @@ echo "Show Corrected Data"
 mrview ${TOPUP_DIR}/data_unwarp.nii.gz
 
 
+echo $0 " Done" 

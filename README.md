@@ -13,11 +13,16 @@ Scripted processing of the post-mortem chimpanzee diffusion MRI (dMRI) dataset a
   - DTI Fit
 
 ## Requirements
-- FSL incl eddy_cuda
-- MRTRIX
-- ANTS
-- Python 3 incl Numpy, Nibabel, SciPy, DiPy, [autodmri>=0.2.5](https://pypi.org/project/autodmri/)
-- Bru2Nii for Bruker Data Conversion
+* FSL incl eddy_cuda
+* MRTRIX
+* ANTS
+* Python 3 incl following libraries: 
+	* [Numpy](https://pypi.org/project/numpy/)
+	* [Nibabel](https://pypi.org/project/nibabel/) 
+	* [SciPy](https://pypi.org/project/scipy/)
+	* [DiPy](https://pypi.org/project/dipy/)
+	* [autodmri>=0.2.5](https://pypi.org/project/autodmri/)
+* Bru2Nii for Bruker Data Conversion
 
 ## How to Use
 - All processing variables can be modified in the 'SET_VARIABLES.sh' file.

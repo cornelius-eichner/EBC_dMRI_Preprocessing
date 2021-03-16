@@ -5,7 +5,7 @@ source ./SET_VARIABLES.sh
 
 # Copy nii files to topup directory
 echo "Copy nii files to MNI reorient directory"
-cp ${NII_RAW_DIR}/*${CHECK_REORIENT_SCAN}P1.nii.gz ${REORIENT_DIR}/data.nii.gz
+cp ${NII_RAW_DIR}/*X${CHECK_REORIENT_SCAN}P1.nii.gz ${REORIENT_DIR}/data.nii.gz
 
 
 # Reshape image matrix to resemble MNI space
@@ -35,8 +35,6 @@ ${FSL_LOCAL}/fslmaths ${REORIENT_DIR}/data_reshape_unscaled.nii.gz \
 ##################
 
 
-
-
 # Show reoriented data alongside with MNI brain
 mrview \
 	-load ${REORIENT_DIR}/data_reshape.nii.gz \
@@ -48,3 +46,5 @@ mrview \
 	-interpolation 0 \
 	-mode 2 &
 
+
+echo $0 " Done" 

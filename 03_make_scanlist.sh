@@ -13,3 +13,6 @@ for Scan in ${BRUKER_RAW_DIR}/*/; do
 	    python3 ${SCRIPTS}/print_scan_name.py "${Scan}/acqp" >> SCANLIST.txt
 	fi
 done
+
+
+echo $0 " Done" 

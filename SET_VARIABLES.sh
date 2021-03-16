@@ -3,26 +3,26 @@
 # This file needs to be copied in the preprocessing folder of each respective subject. Potential changes in processing should be made in this folder.
 
 # Folder of Bruker Data in Bruker Format
-BRUKER_RAW_DIR='ENTER BRUKER DIR'
+BRUKER_RAW_DIR=/data/pt_02101_dMRI/007_C_C_NEGRA_ID/raw/210217_BioSpec9430_Bremerhaven_WB/20210217_151226_007_C_C_NEGRA_ID11357_1_2/
 
 #########################################
 # Select Scans for Processing
 
 # Reorientation Check
-CHECK_REORIENT_SCAN='ENTER SINGLE VOLUME NUMBER FOR REORIENTATION CHECK'
+CHECK_REORIENT_SCAN=8
 
 # Noisemap
-NOISE_SCAN='ENTER NOISEMAP NUMBER'
+NOISE_SCAN=10
 
 # Topup
-TOPUP_LR_RUN='ENTER TOPUP LR NUMBER'
-TOPUP_RL_RUN='ENTER TOPUP RL NUMBER'
+TOPUP_LR_RUN=8
+TOPUP_RL_RUN=9
 
 
 # Diffusion Data
-DIFF_SCANS='ENTER DIFFUSION SCANS NUMBER e.g., (18 35 22 23 24 25 26 27 28)'
+DIFF_SCANS=(8 12 13 14 15 16 17 30 19)
 DATA_RESCALING="10000"
-MASK_THRESHOLD="50"
+MASK_THRESHOLD=8
 HEAT_CORRECTION="NO" #YES/NO
 
 
@@ -53,6 +53,10 @@ PE_DIRECTION="1"
 
 # Fetch file directory as Variable
 LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+
+# Check the number of available cores for parallel processing
+N_CORES=$(nproc --all)
 
 ########################
 # Local Folders for Processing

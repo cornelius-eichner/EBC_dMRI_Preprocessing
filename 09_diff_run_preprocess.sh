@@ -18,10 +18,6 @@ python3 ${SCRIPTS}/ncchi_bias_correct.py \
 	--out ${DIFF_DATA_DIR}/data_debias.nii.gz
 
 
-
-
-
-
 ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data.nii.gz \
 	-sub ${DIFF_DATA_DIR}/data_debias.nii.gz \
 	${DIFF_DATA_DIR}/data_debias_residual.nii.gz
@@ -263,3 +259,6 @@ python3 ${SCRIPTS}/normalize_data.py \
 
 #
 ##################
+
+
+echo $0 " Done" 

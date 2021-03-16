@@ -35,3 +35,6 @@ mkdir -p  \
 	${FLASH_DIR_FA80} \
 	${FLASH_DIR_HIGHRES} \
 	${FLASH_DIR_ULTRA_HIGHRES} 
+
+
+echo $0 " Done" 

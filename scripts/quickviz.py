@@ -77,7 +77,7 @@ def main():
 
     # enforcing 3D data
     datapath = args.input
-    data = nib.load(datapath).get_data()
+    data = nib.load(datapath).get_fdata()
     if data.ndim < 3:
         print('Data is less than 3D, terminating')
         return 0
@@ -99,7 +99,7 @@ def main():
     if args.mask is None:
         mask = np.ones_like(data).astype(np.bool)
     else:
-        mask = nib.load(args.mask).get_data().astype(np.bool)
+        mask = nib.load(args.mask).get_fdata().astype(np.bool)
 
     # masking data
     data = data*mask

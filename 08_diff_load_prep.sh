@@ -10,15 +10,15 @@ source ./SET_VARIABLES.sh
 # Assemble all DIFF_SCANS from raw nifti folder
 echo "Loading Data"
 ${FSL_LOCAL}/fslmerge -t ${DIFF_DATA_DIR}/data.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[0]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[1]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[2]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[3]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[4]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[5]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[6]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[7]}P1.nii.gz \
-	./nifti_raw/*${DIFF_SCANS[8]}P1.nii.gz 
+	${NII_RAW_DIR}/*X${DIFF_SCANS[0]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[1]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[2]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[3]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[4]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[5]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[6]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[7]}P1.nii.gz \
+	${NII_RAW_DIR}/*X${DIFF_SCANS[8]}P1.nii.gz 
 
 # Load bvecs and bvals from Bruker method file
 echo "Loading bvecs bvals"
@@ -88,10 +88,13 @@ ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_unscaled.nii.gz \
 echo 'Generate mask from b0 values'
 
 # round the bvals file to use dwiextract -b0
-python3 ${SCRIPTS}/round_bvals.py --in ${DIFF_DATA_DIR}/data.bval --out ${DIFF_DATA_DIR}/data.bval_round
+python3 ${SCRIPTS}/round_bvals.py #
+	--in ${DIFF_DATA_DIR}/data.bval #
+	--out ${DIFF_DATA_DIR}/data.bval_round
 
 # Extract b0 volumes
 dwiextract \
+	-force \
 	-bzero \
 	-fslgrad ${DIFF_DATA_DIR}/data.bvec ${DIFF_DATA_DIR}/data.bval_round \
 	${DIFF_DATA_DIR}/data.nii.gz \
@@ -122,45 +125,68 @@ mrview ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
 	-colourmap 1 \
 	-interpolation 0 & 
 
-# Find THRESHOLD VALUE in a histogram
-echo 'Adapt MASK_THRESHOLD Variable in SET_VARIABLES.sh to exclude noise peak in histogram'
-python3 ${SCRIPTS}/quickviz.py --his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz --loghis
+MASKING_ANSWER="N"
+MASKING_DONE="N"
+while [ "$MASKING_DONE" == "N" ]; do
 
-# Update mask threshold variable
-source ./SET_VARIABLES.sh
+	# Find THRESHOLD VALUE in a histogram
+	echo 'Adapt MASK_THRESHOLD Variable in SET_VARIABLES.sh to exclude noise peak in histogram'
+	python3 ${SCRIPTS}/quickviz.py --his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz --loghis
 
-# Generate mask by thresholing the b0 volumes (FLS maths)
-${FSL_LOCAL}/fslmaths \
-	${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
-	-Tmean \
-	-kernel 3d \
-	-fmedian \
-	-thr ${MASK_THRESHOLD} \
-	-bin \
-	-fillh26 ${DIFF_DATA_DIR}/mask.nii.gz \
-	-odt int
+	# Generate mask by thresholing the b0 volumes (FLS maths)
+	${FSL_LOCAL}/fslmaths \
+		${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+		-Tmean \
+		-kernel 3d \
+		-fmedian \
+		-thr ${MASK_THRESHOLD} \
+		-bin \
+		-fillh26 ${DIFF_DATA_DIR}/mask.nii.gz \
+		-odt int
 
-# Extract the largest connected volume in generated mask
-maskfilter \
-	-f \
-	-largest \
-	${DIFF_DATA_DIR}/mask.nii.gz connect ${DIFF_DATA_DIR}/mask_fit_connect.nii.gz
+	# Extract the largest connected volume in generated mask
+	maskfilter \
+		-force \
+		-largest \
+		${DIFF_DATA_DIR}/mask.nii.gz connect ${DIFF_DATA_DIR}/mask_fit_connect.nii.gz
 
-# Dilate the mask 
-maskfilter \
-	-f \
-	-npass 2 \
-	${DIFF_DATA_DIR}/mask_fit_connect.nii.gz dilate ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz
+	# Dilate the mask 
+	maskfilter \
+		-force \
+		-npass 2 \
+		${DIFF_DATA_DIR}/mask_fit_connect.nii.gz dilate ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz
 
-# Check the results
-mrview \
-	-load ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
-	-interpolation 0  \
-	-mode 2 \
-	-overlay.load ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz \
-	-overlay.opacity 0.5 \
-	-overlay.interpolation 0 \
-	-overlay.colourmap 3 
+	# Check the results
+	mrview \
+		-load ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+		-interpolation 0  \
+		-mode 2 \
+		-overlay.load ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz \
+		-overlay.opacity 0.5 \
+		-overlay.interpolation 0 \
+		-overlay.colourmap 3 
+
+	echo "Did the script choose the correct threshold for the mask ? [Y/N]"
+	read MASKING_ANSWER
+
+	if [ $MASKING_ANSWER == "N" ]
+	then
+	echo "Repeating procedure with new threshold" ${THRESHOLD}
+	echo 'Please provide mask threshold:'
+	read MASK_THRESHOLD
+
+	
+	elif [ $MASKING_ANSWER == "Y" ]
+	then
+	MASKING_DONE="Y"
+
+	else 
+	echo "Invalid answer, please repeat"
+
+	fi 
+
+done 
+
 
 # Get rid of the evidence 
 rm -f ${DIFF_DATA_DIR}/mask.nii.gz ${DIFF_DATA_DIR}/mask_fit_connect.nii.gz 
@@ -172,6 +198,7 @@ mv -f ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz ${DIFF_DATA_DIR}/mask.nii.gz
 
 ####################################
 # Plot the dMRI timeseries
+echo "Plot the dMRI timeseries"
 
 python3 ${SCRIPTS}/plot_timeseries.py \
 	--in ${DIFF_DATA_DIR}/data.nii.gz \
@@ -186,7 +213,7 @@ python3 ${SCRIPTS}/plot_timeseries.py \
 ####################################
 # Check the bvec orientation
 
-echo 'Check the bvec orientation'
+echo "Check the bvec orientation"
 
 mkdir -p ${DIFF_DATA_DIR}/test_dti
 ${FSL_LOCAL}/dtifit \
@@ -203,4 +230,4 @@ rm -rf ${DIFF_DATA_DIR}/test_dti
 ##################
 
 
-echo 'Done'
+echo $0 " Done" 
