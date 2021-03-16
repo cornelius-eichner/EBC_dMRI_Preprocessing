@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo 'Running dMRI processing, make sure to have ANTS running (for N4), next to otherwise active environments'
+
 # Load Local Variables
 source ./SET_VARIABLES.sh
 
@@ -7,7 +9,7 @@ source ./SET_VARIABLES.sh
 ####################################
 # MP PCA Denoising
 
-echo 'MP PCA Denoising'
+echo 'Bias Correction'
 
 # Noise Debiasing with Noisemap acquisition
 python3 ${SCRIPTS}/ncchi_bias_correct.py \
@@ -17,10 +19,11 @@ python3 ${SCRIPTS}/ncchi_bias_correct.py \
 	--axes 0,2 \
 	--out ${DIFF_DATA_DIR}/data_debias.nii.gz
 
-
 ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data.nii.gz \
 	-sub ${DIFF_DATA_DIR}/data_debias.nii.gz \
 	${DIFF_DATA_DIR}/data_debias_residual.nii.gz
+
+echo 'MP PCA Denoising'
 
 dwidenoise -f ${DIFF_DATA_DIR}/data_debias.nii.gz \
 	${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
@@ -135,13 +138,23 @@ python3 ${SCRIPTS}/make_fake_eddy_files.py \
 	--TE ${TE} \
 	--PE ${PE_DIRECTION}
 
+# For some reason, ANTS N4 expects a 4D mask for N4, creating 4D mask using fslmaths
+${FSL_LOCAL}/fslmaths \
+	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+	-mas ${DIFF_DATA_DIR}/mask.nii.gz \
+	-bin \
+	${DIFF_DATA_DIR}/mask_4D.nii.gz \
+	-odt int
+
 # Estimate N4 Bias Correction of Median B0 Data
 N4BiasFieldCorrection \
-	-i ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
-	-x ${DIFF_DATA_DIR}/mask.nii.gz \
-	-o [${DIFF_DATA_DIR}/data_b0s_mc_N4.nii.gz,${DIFF_DATA_DIR}/data_b0s_mc_N4_biasfield.nii.gz] \
-	-d 3 \
-	-v 
+	-i ${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+	-x ${DIFF_DATA_DIR}/mask_4D.nii.gz \
+	-o [${DIFF_DATA_DIR}/data_N4.nii.gz,${DIFF_DATA_DIR}/N4_biasfield.nii.gz] \
+	-d 4 \
+	-v
+
+rm -rf ${DIFF_DATA_DIR}/mask_4D.nii.gz 
 
 # Apply bias field correction to entire dMRI dataset
 ${FSL_LOCAL}/fslmaths \
@@ -172,9 +185,10 @@ mv -f ${EDDY_DIR}/*displacement_fields* ${EDDY_FIELDS_DIR}/
 # Check Eddy Correction
 mrview -mode 2 \
 	-load ${EDDY_DIR}/eddy.nii.gz \
-	-interpolation 0 
+	-interpolation 0 &
 
 # Split original data
+echo "Splitting dataset to specified out_folder" 
 ${FSL_LOCAL}/fslsplit \
 	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
 	${DIFF_DATA_DIR}/split/

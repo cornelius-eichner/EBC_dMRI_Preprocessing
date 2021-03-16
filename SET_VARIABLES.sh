@@ -22,17 +22,18 @@ TOPUP_RL_RUN=9
 # Diffusion Data
 DIFF_SCANS=(8 12 13 14 15 16 17 30 19)
 DATA_RESCALING="10000"
-MASK_THRESHOLD=8
+MASK_THRESHOLD=4.2
 HEAT_CORRECTION="NO" #YES/NO
 
 
 # FLASH Scans
-FLASH_FA_05=29
-FLASH_FA_12p5=30
-FLASH_FA_25=31
-FLASH_FA_50=32
-FLASH_FA_80=33
-FLASH_HIGHRES=31
+FLASH_FA_05=21
+FLASH_FA_12p5=22
+FLASH_FA_25=23
+FLASH_FA_50=24
+FLASH_FA_80=25
+FLASH_HIGHRES=26
+FLASH_ULTRA_HIGHRES=31
 
 ####################################
 
@@ -87,6 +88,7 @@ FLASH_DIR_FA25="${FLASH_DIR}/FA25/"
 FLASH_DIR_FA50="${FLASH_DIR}/FA50/"
 FLASH_DIR_FA80="${FLASH_DIR}/FA80/"
 FLASH_DIR_HIGHRES="${FLASH_DIR}/HIGHRES/"
+FLASH_DIR_ULTRA_HIGHRES="${FLASH_DIR}/ULTRA_HIGHRES/"
 
 ########################
 # Set Scripts and Software Folders
@@ -94,7 +96,7 @@ SCRIPTS=${LOCAL_DIR}/scripts/
 SOFTWARE=/data/pt_02101_dMRI/software/
 FSL_LOCAL=/data/pt_02101_dMRI/software/fsl6/bin/
 CONFIG_DIR=/data/pt_02101_dMRI/config/
-EDDY_PATH=/data/pt_02101_dMRI/software/eddy/eddy_openmp
+EDDY_PATH=/data/pt_02101_dMRI/software/eddy/eddy_cuda8.0
 
 ########################
 # Load Local CONDA Environment

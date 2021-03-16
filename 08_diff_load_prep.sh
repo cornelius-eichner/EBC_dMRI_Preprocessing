@@ -88,8 +88,8 @@ ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_unscaled.nii.gz \
 echo 'Generate mask from b0 values'
 
 # round the bvals file to use dwiextract -b0
-python3 ${SCRIPTS}/round_bvals.py #
-	--in ${DIFF_DATA_DIR}/data.bval #
+python3 ${SCRIPTS}/round_bvals.py \
+	--in ${DIFF_DATA_DIR}/data.bval \
 	--out ${DIFF_DATA_DIR}/data.bval_round
 
 # Extract b0 volumes
