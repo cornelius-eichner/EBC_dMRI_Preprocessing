@@ -138,7 +138,7 @@ python3 ${SCRIPTS}/make_fake_eddy_files.py \
 	--TE ${TE} \
 	--PE ${PE_DIRECTION}
 
-# For some reason, ANTS N4 expects a 4D mask for N4, creating 4D mask using fslmaths
+# For unknown reasons, ANTS N4 expects a 4D mask for N4, creating 4D mask using fslmaths
 ${FSL_LOCAL}/fslmaths \
 	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
 	-mas ${DIFF_DATA_DIR}/mask.nii.gz \
@@ -150,18 +150,11 @@ ${FSL_LOCAL}/fslmaths \
 N4BiasFieldCorrection \
 	-i ${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
 	-x ${DIFF_DATA_DIR}/mask_4D.nii.gz \
-	-o [${DIFF_DATA_DIR}/data_N4.nii.gz,${DIFF_DATA_DIR}/N4_biasfield.nii.gz] \
+	-o [${DIFF_DATA_N4_DIR}/data_N4.nii.gz,${DIFF_DATA_N4_DIR}/N4_biasfield.nii.gz] \
 	-d 4 \
 	-v
 
 rm -rf ${DIFF_DATA_DIR}/mask_4D.nii.gz 
-
-# Apply bias field correction to entire dMRI dataset
-${FSL_LOCAL}/fslmaths \
-	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
-	-div ${DIFF_DATA_DIR}/data_b0s_mc_N4_biasfield.nii.gz \
-	${DIFF_DATA_N4_DIR}/data_N4.nii.gz \
-	-odt float
 
 # Run Eddy on N4 Corrected data
 ${EDDY_PATH} \
@@ -174,7 +167,7 @@ ${EDDY_PATH} \
 	--topup=${TOPUP_DIR}/topup \
 	--out=${EDDY_DIR}/eddy \
 	--dfields=${EDDY_FIELDS_DIR}/eddy \
-	--repol \
+	--repol --cnr_maps \
 	--interp=spline \
 	--data_is_shelled \
 	-v
@@ -204,7 +197,7 @@ for filename in ${EDDY_FIELDS_DIR}/* ; do
 		--relout 
 done
 
-echo "Calculate Jacobi Determinant" 
+echo "Calculate Jacobi Determinants of Displacement Fields" 
 for filename in ${EDDY_FIELDS_REL_DIR}/* ; do
 	echo "Calculating Jacobi Determinant of Warp Field" ${filename##*/}
 	python3 ${SCRIPTS}/calc_jacobian.py \
@@ -222,7 +215,10 @@ python3 ${SCRIPTS}/warp_data.py \
 
 
 echo "Stitching together Measurements" 
-${FSL_LOCAL}/fslmerge -t ${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz ${SPLIT_WARPED_DIR}/*nii.gz
+${FSL_LOCAL}/fslmerge \
+	-t \
+	${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz \
+	${SPLIT_WARPED_DIR}/*nii.gz
 
 #
 ##################
@@ -255,8 +251,6 @@ cp ${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz ${DIFF_DATA_RELEASE_
 cp ${DIFF_DATA_DIR}/mask.nii.gz ${DIFF_DATA_RELEASE_DIR}/mask.nii.gz
 cp ${DIFF_DATA_DIR}/data.bval ${DIFF_DATA_RELEASE_DIR}/data.bval
 cp ${EDDY_DIR}/*bvecs ${DIFF_DATA_RELEASE_DIR}/data.bvec
-
-
 
 
 ####################################
