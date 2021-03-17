@@ -167,7 +167,9 @@ ${EDDY_PATH} \
 	--topup=${TOPUP_DIR}/topup \
 	--out=${EDDY_DIR}/eddy \
 	--dfields=${EDDY_FIELDS_DIR}/eddy \
-	--repol --cnr_maps \
+	--repol \
+	--cnr_maps \
+	--residuals \
 	--interp=spline \
 	--data_is_shelled \
 	-v
