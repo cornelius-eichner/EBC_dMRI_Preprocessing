@@ -95,7 +95,7 @@ FLASH_DIR_ULTRA_HIGHRES="${FLASH_DIR}/ULTRA_HIGHRES/"
 SCRIPTS=${LOCAL_DIR}/scripts/
 SOFTWARE=/data/pt_02101_dMRI/software/
 FSL_LOCAL=/data/pt_02101_dMRI/software/fsl6/bin/
-CONFIG_DIR=/data/pt_02101_dMRI/config/
+CONFIG_DIR=${LOCAL_DIR}/config/
 EDDY_PATH=/data/pt_02101_dMRI/software/eddy/eddy_cuda8.0
 
 ########################
