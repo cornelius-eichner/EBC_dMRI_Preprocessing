@@ -214,7 +214,8 @@ echo "Plot the dMRI timeseries"
 python3 ${SCRIPTS}/plot_timeseries.py \
 	--in ${DIFF_DATA_DIR}/data.nii.gz \
 	--mask ${DIFF_DATA_DIR}/mask.nii.gz \
-	--bvals ${DIFF_DATA_DIR}/data.bval
+	--bvals ${DIFF_DATA_DIR}/data.bval \
+	--out ${DIFF_DATA_DIR}
 
 #
 ##################
