@@ -100,52 +100,65 @@ def main():
     plt.subplot(4,3,1)
     plt.title('Data Orig Saggital')
     plt.imshow(data[round(dims[0]/2), :, :, 0], vmin = data_vmin, vmax = data_vmax)
+    plt.axis('off')
 
     plt.subplot(4,3,2)
     plt.title('Data Orig Coronal')
     plt.imshow(data[:, round(dims[1]/2), :, 0], vmin = data_vmin, vmax = data_vmax)
+    plt.axis('off')
     
     plt.subplot(4,3,3)
     plt.title('Data Orig Axial')
     plt.imshow(data[:, :, round(dims[2]/2), 0], vmin = data_vmin, vmax = data_vmax)
+    plt.axis('off')
 
     plt.subplot(4,3,4)
     plt.title('Sigma Map Saggital')
     plt.imshow(sigma_array[round(dims[0]/2), :, :], vmin = sigma_vmin, vmax = sigma_vmax)
+    plt.axis('off')
 
     plt.subplot(4,3,5)
     plt.title('Sigma Map Coronal')
     plt.imshow(sigma_array[:, round(dims[1]/2), :], vmin = sigma_vmin, vmax = sigma_vmax)
+    plt.axis('off')
     
     plt.subplot(4,3,6)
     plt.title('Sigma Map Axial')
     plt.imshow(sigma_array[:, :, round(dims[2]/2)], vmin = sigma_vmin, vmax = sigma_vmax)
+    plt.axis('off')
 
     plt.subplot(4,3,7)
     plt.title('Data Corr Saggital')
     plt.imshow(data_debias[round(dims[0]/2), :, :, 0], vmin = data_vmin, vmax = data_vmax)
+    plt.axis('off')
 
     plt.subplot(4,3,8)
     plt.title('Data Corr Coronal')
     plt.imshow(data_debias[:, round(dims[1]/2), :, 0], vmin = data_vmin, vmax = data_vmax)
+    plt.axis('off')
     
     plt.subplot(4,3,9)
     plt.title('Data Corr Axial')
     plt.imshow(data_debias[:, :, round(dims[2]/2), 0], vmin = data_vmin, vmax = data_vmax)
+    plt.axis('off')
 
     plt.subplot(4,3,10)
     plt.title('Data Corr Residual Saggital')
     plt.imshow((data - data_debias)[round(dims[0]/2), :, :, 0])
+    plt.axis('off')
 
     plt.subplot(4,3,11)
     plt.title('Data Corr Residual Coronal')
     plt.imshow((data - data_debias)[:, round(dims[1]/2), :, 0])
+    plt.axis('off')
     
     plt.subplot(4,3,12)
     plt.title('Data Corr Residual Axial')
     plt.imshow((data - data_debias)[:, :, round(dims[2]/2), 0])
+    plt.axis('off')
 
     plt.tight_layout()
+
     plt.show()
 
 
