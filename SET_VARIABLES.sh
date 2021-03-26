@@ -3,37 +3,37 @@
 # This file needs to be copied in the preprocessing folder of each respective subject. Potential changes in processing should be made in this folder.
 
 # Folder of Bruker Data in Bruker Format
-BRUKER_RAW_DIR=/data/pt_02101_dMRI/007_C_C_NEGRA_ID/raw/210217_BioSpec9430_Bremerhaven_WB/20210217_151226_007_C_C_NEGRA_ID11357_1_2/
+BRUKER_RAW_DIR=<SET DATA FOLDER>
 
 #########################################
 # Select Scans for Processing
 
 # Reorientation Check
-CHECK_REORIENT_SCAN=8
+CHECK_REORIENT_SCAN=
 
 # Noisemap
-NOISE_SCAN=10
+NOISE_SCAN=
 
 # Topup
-TOPUP_LR_RUN=8
-TOPUP_RL_RUN=9
+TOPUP_LR_RUN=
+TOPUP_RL_RUN=
 
 
 # Diffusion Data
-DIFF_SCANS=(8 12 13 14 15 16 17 30 19)
-DATA_RESCALING="10000"
+DIFF_SCANS= # e.g., (8 12 13 14 15 16 17 30 19)
+DATA_RESCALING=0.5
 MASK_THRESHOLD=4.2
 HEAT_CORRECTION="NO" #YES/NO
 
 
 # FLASH Scans
-FLASH_FA_05=21
-FLASH_FA_12p5=22
-FLASH_FA_25=23
-FLASH_FA_50=24
-FLASH_FA_80=25
-FLASH_HIGHRES=26
-FLASH_ULTRA_HIGHRES=31
+FLASH_FA_05=
+FLASH_FA_12p5=
+FLASH_FA_25=
+FLASH_FA_50=
+FLASH_FA_80=
+FLASH_HIGHRES=
+FLASH_ULTRA_HIGHRES=
 
 ####################################
 
