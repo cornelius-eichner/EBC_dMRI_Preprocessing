@@ -20,7 +20,7 @@ mv -f ${NOISEMAP_DIR}/noisemap_reshape.nii.gz ${NOISEMAP_DIR}/noisemap.nii.gz
 
 mv ${NOISEMAP_DIR}/noisemap.nii.gz ${NOISEMAP_DIR}/noisemap_unscaled.nii.gz 
 ${FSL_LOCAL}/fslmaths ${NOISEMAP_DIR}/noisemap_unscaled.nii.gz \
-	-mul ${DATA_RESCALING} \
+	-div ${DATA_RESCALING} \
 	${NOISEMAP_DIR}/noisemap.nii.gz \
 	-odt float 
 

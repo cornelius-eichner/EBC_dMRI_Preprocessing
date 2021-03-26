@@ -73,7 +73,7 @@ echo 'Rescale Data to prevent very small numbers'
 
 mv -f ${DIFF_DATA_DIR}/data.nii.gz ${DIFF_DATA_DIR}/data_unscaled.nii.gz 
 ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_unscaled.nii.gz \
-	-mul ${DATA_RESCALING} \
+	-div ${DATA_RESCALING} \
 	${DIFF_DATA_DIR}/data.nii.gz \
 	-odt float 
 

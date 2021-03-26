@@ -24,10 +24,20 @@ mrinfo ${REORIENT_DIR}/data_reshape.nii.gz
 
 ####################################
 # Rescale Data to prevent very small numbers
+DATA_RESCALING_OLD=$DATA_RESCALING
+DATA_RESCALING=$(${FSL_LOCAL}/fslstats ${REORIENT_DIR}/data_reshape.nii.gz -m)
 
-mv ${REORIENT_DIR}/data_reshape.nii.gz ${REORIENT_DIR}/data_reshape_unscaled.nii.gz 
+
+DATA_RESCALING_STR_OLD="DATA_RESCALING=$DATA_RESCALING_OLD"
+DATA_RESCALING_STR_NEW="DATA_RESCALING=$DATA_RESCALING"
+
+# Saving mask string in set variables file
+sed -i "s/$DATA_RESCALING_STR_OLD/$DATA_RESCALING_STR_NEW/gi" ./SET_VARIABLES.sh
+
+mv -f ${REORIENT_DIR}/data_reshape.nii.gz ${REORIENT_DIR}/data_reshape_unscaled.nii.gz 
+
 ${FSL_LOCAL}/fslmaths ${REORIENT_DIR}/data_reshape_unscaled.nii.gz \
-	-mul ${DATA_RESCALING} \
+	-div ${DATA_RESCALING} \
 	${REORIENT_DIR}/data_reshape.nii.gz \
 	-odt float 
 
