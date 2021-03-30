@@ -17,11 +17,9 @@ rm -rf \
 	${EDDY_FIELDS_REL_DIR} \
 	${EDDY_FIELDS_JAC_DIR} \
 	${NII_RAW_DIR} \
-	${NOISEMAP_DIR} \
 	${REORIENT_DIR} \
 	${SPLIT_DIR} \
 	${SPLIT_WARPED_DIR} \
-	${TOPUP_DIR} 
 
 
 echo $0 " Done" 

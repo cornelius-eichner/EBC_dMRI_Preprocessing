@@ -77,7 +77,7 @@ python3 ${SCRIPTS}/reshape_volume.py \
 	--out ${FLASH_DIR_ULTRA_HIGHRES}/data_reshape.nii.gz \
 	--ord ${RESHAPE_ARRAY_ORD} \
 	--inv ${RESHAPE_ARRAY_INV} \
-	--res ${RES}
+	--res ${ULTRA_HIGHRES}
 
 
 mv -f ${FLASH_DIR_FA05}/data_reshape.nii.gz ${FLASH_DIR_FA05}/data.nii.gz

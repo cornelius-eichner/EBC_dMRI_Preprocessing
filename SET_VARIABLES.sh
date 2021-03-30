@@ -3,37 +3,37 @@
 # This file needs to be copied in the preprocessing folder of each respective subject. Potential changes in processing should be made in this folder.
 
 # Folder of Bruker Data in Bruker Format
-BRUKER_RAW_DIR=/data/pt_02101_dMRI/007_C_C_NEGRA_ID/raw/210217_BioSpec9430_Bremerhaven_WB/20210217_151226_007_C_C_NEGRA_ID11357_1_2/
+BRUKER_RAW_DIR=/data/pt_02101_dMRI/027_C_W_FREDY_TAI_E/raw/20210317_150859_027_C_W_FREDY_TAI_E_1_1/
 
 #########################################
 # Select Scans for Processing
 
 # Reorientation Check
-CHECK_REORIENT_SCAN=8
+CHECK_REORIENT_SCAN=12
 
 # Noisemap
-NOISE_SCAN=10
+NOISE_SCAN=16
 
 # Topup
-TOPUP_LR_RUN=8
-TOPUP_RL_RUN=9
+TOPUP_LR_RUN=12
+TOPUP_RL_RUN=15
 
 
 # Diffusion Data
-DIFF_SCANS=(8 12 13 14 15 16 17 30 19)
-DATA_RESCALING="10000"
-MASK_THRESHOLD=4.2
+DIFF_SCANS=(12 18 19 20 21 22 23 24 25)
+DATA_RESCALING=0.002042
+MASK_THRESHOLD=0.25
 HEAT_CORRECTION="NO" #YES/NO
 
 
 # FLASH Scans
-FLASH_FA_05=21
-FLASH_FA_12p5=22
-FLASH_FA_25=23
-FLASH_FA_50=24
-FLASH_FA_80=25
-FLASH_HIGHRES=26
-FLASH_ULTRA_HIGHRES=31
+FLASH_FA_05=27
+FLASH_FA_12p5=28
+FLASH_FA_25=29
+FLASH_FA_50=30
+FLASH_FA_80=31
+FLASH_HIGHRES=32
+FLASH_ULTRA_HIGHRES=33
 
 ####################################
 
@@ -42,8 +42,10 @@ FLASH_ULTRA_HIGHRES=31
 # Reorientation to MNI space
 RESHAPE_ARRAY_ORD="1,0,2"
 RESHAPE_ARRAY_INV="2"
-RES="0.5"
 RESHAPE_BVECS_ORD="1,0,2"
+RES=0.5
+HIGHRES=0.25
+ULTRA_HIGHRES=0.15
 
 
 # Eddy Parameters
@@ -57,7 +59,7 @@ LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 
 # Check the number of available cores for parallel processing
-N_CORES=$(nproc --all)
+N_CORES=4
 
 ########################
 # Local Folders for Processing

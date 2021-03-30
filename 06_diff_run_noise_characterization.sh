@@ -18,6 +18,8 @@ python3 ${SCRIPTS}/reshape_volume.py \
 
 mv -f ${NOISEMAP_DIR}/noisemap_reshape.nii.gz ${NOISEMAP_DIR}/noisemap.nii.gz
 
+
+echo "Rescale noisemap like other data"
 mv ${NOISEMAP_DIR}/noisemap.nii.gz ${NOISEMAP_DIR}/noisemap_unscaled.nii.gz 
 ${FSL_LOCAL}/fslmaths ${NOISEMAP_DIR}/noisemap_unscaled.nii.gz \
 	-div ${DATA_RESCALING} \
@@ -28,14 +30,15 @@ ${FSL_LOCAL}/fslmaths ${NOISEMAP_DIR}/noisemap_unscaled.nii.gz \
 
 ####################################
 echo "Compute noise distribution on noise map"
-get_distribution ${NOISEMAP_DIR}/noisemap.nii.gz \
-				 ${NOISEMAP_DIR}/sigmas.nii.gz \
-				 ${NOISEMAP_DIR}/Ns.nii.gz \
-				 ${NOISEMAP_DIR}/noise_mask.nii.gz \
-				 -a 1 \
-				 --noise_maps \
-				 --ncores ${N_CORES} \
-				 -m moments
+get_distribution -f \
+	${NOISEMAP_DIR}/noisemap.nii.gz \
+	${NOISEMAP_DIR}/sigmas.nii.gz \
+	${NOISEMAP_DIR}/Ns.nii.gz \
+	${NOISEMAP_DIR}/noise_mask.nii.gz \
+	-a 1 \
+	--noise_maps \
+	--ncores ${N_CORES} \
+	-m moments
 
 
 echo $0 " Done" 

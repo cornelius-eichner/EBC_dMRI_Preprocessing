@@ -9,7 +9,7 @@ source ./SET_VARIABLES.sh
 ####################################
 # MP PCA Denoising
 
-echo 'Bias Correction'
+echo 'Noise Bias Correction'
 
 # Noise Debiasing with Noisemap acquisition
 python3 ${SCRIPTS}/ncchi_bias_correct.py \

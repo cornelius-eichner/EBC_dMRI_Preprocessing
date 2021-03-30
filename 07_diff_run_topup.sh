@@ -2,7 +2,10 @@
 
 # Load Local Variables
 source ./SET_VARIABLES.sh
-source ${FSLDIR}/etc/fslconf/fsl.sh
+#source ${FSLDIR}/etc/fslconf/fsl.sh
+source ${FSL_LOCAL}/etc/fslconf/fsl.sh
+
+
 
 # Copy nii files to topup directory
 echo "Copy nii files to topup directory"
