@@ -80,7 +80,6 @@ def main():
     print('Swapped Data Shape: {}\n'.format(data_swap.shape))
 
     aff_cust = RES*np.eye(4)
-    aff_cust[3,3] = 0
 
     if ORIENTATION == 'rad':
     	print('Saving Data in Radiological Convention')
