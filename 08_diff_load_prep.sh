@@ -100,19 +100,11 @@ dwiextract \
 	${DIFF_DATA_DIR}/data.nii.gz \
 	${DIFF_DATA_DIR}/data_b0s.nii.gz
 
-mrview ${DIFF_DATA_DIR}/data_b0s.nii.gz \
-	-colourmap 1 \
-	-interpolation 0 &
-
 # MC correct the b0 volumes
 ${FSL_LOCAL}/mcflirt \
 	-in ${DIFF_DATA_DIR}/data_b0s.nii.gz \
 	-out ${DIFF_DATA_DIR}/data_b0s_mc.nii.gz \
 	-refvol 0
-
-mrview ${DIFF_DATA_DIR}/data_b0s_mc.nii.gz \
-	-colourmap 1 \
-	-interpolation 0 &
 
 # Filter Volumes for mask thresholding
 ${FSL_LOCAL}/fslmaths \
@@ -121,8 +113,12 @@ ${FSL_LOCAL}/fslmaths \
 	-kernel 3d \
 	-fmedian ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz
 
-mrview ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
-	-colourmap 1 \
+mrview \
+	-load ${DIFF_DATA_DIR}/data_b0s_mc.nii.gz \
+	-interpolation 0 \
+	-load ${DIFF_DATA_DIR}/data_b0s.nii.gz \
+	-interpolation 0 \
+	-load ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
 	-interpolation 0 & 
 
 MASKING_ANSWER="N"
@@ -175,7 +171,10 @@ while [ "$MASKING_DONE" == "N" ]; do
 
 	THRS_OLD=$MASK_THRESHOLD # Saving old threshold in variable for replacement in SET_VARIABLES.txt
 
-	echo 'Please provide mask threshold:'
+	echo "Previous mask threshold value:"
+	echo $MASK_THRESHOLD
+
+	echo 'Please provide new mask threshold value:'
 	read MASK_THRESHOLD
 	echo "Repeating procedure with new threshold" ${MASK_THRESHOLD}
 
@@ -235,7 +234,7 @@ ${FSL_LOCAL}/dtifit \
 	-b ${DIFF_DATA_DIR}/data.bval \
 	-o ${DIFF_DATA_DIR}/test_dti/dti
 
-fsleyes ${DIFF_DATA_DIR}/test_dti/dti_FA* ${DIFF_DATA_DIR}/test_dti/dti_V1* ${DIFF_DATA_DIR}/test_dti/dti_MD*
+fsleyes ${DIFF_DATA_DIR}/test_dti/dti_MD* ${DIFF_DATA_DIR}/test_dti/dti_FA* ${DIFF_DATA_DIR}/test_dti/dti_V1* 
 rm -rf ${DIFF_DATA_DIR}/test_dti
 
 #
