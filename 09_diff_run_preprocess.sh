@@ -271,9 +271,7 @@ ${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz 
 					-w -V
 
 # Create a scaled FA image for improved visualization contrast
-${FSL_LOCAL}/fslmaths ${DTI_DIR}/dti_FA.nii.gz -mul 2 ${DTI_DIR}/dti_FA_mul2.nii.gz 
-
-fsleyes ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_FA_mul2.nii.gz ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_V1* 
+fsleyes ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_V1* 
 
 #
 ##################
