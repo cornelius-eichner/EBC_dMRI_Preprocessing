@@ -45,65 +45,78 @@ python3 ${SCRIPTS}/roll_align_data.py \
 	--out ${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
 	--axis 0
 
-echo "Correct along read axis for different gradient trajectories"
-${FSL_LOCAL}/fnirt \
-	--ref=${TOPUP_DIR}/data_LR_reshape.nii.gz \
-	--in=${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
-	--warpres=2,2,2 \
-	--infwhm=3,2,1,1 \
-	--reffwhm=4,2,0,0 \
-	--fout=${TOPUP_DIR}/fnirt_field.nii.gz \
-	--iout=${TOPUP_DIR}/fnirt_data.nii.gz \
-	-v
+if [ $FLAG_TOPUP_CORR == "TRUE" ]
+then
 
-# Split Nonlinear Warp Field
-${FSL_LOCAL}/fslsplit ${TOPUP_DIR}/fnirt_field.nii.gz ${TOPUP_DIR}/fnirt_field_split -t
+	echo "Correct along read axis for different gradient trajectories"
+	${FSL_LOCAL}/fnirt \
+		--ref=${TOPUP_DIR}/data_LR_reshape.nii.gz \
+		--in=${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
+		--warpres=2,2,2 \
+		--infwhm=3,2,1,1 \
+		--reffwhm=4,2,0,0 \
+		--fout=${TOPUP_DIR}/fnirt_field.nii.gz \
+		--iout=${TOPUP_DIR}/fnirt_data.nii.gz \
+		-v
 
-# Set all dimensions apart y to zero and recombine warp
-${FSL_LOCAL}/fslmaths ${TOPUP_DIR}/fnirt_field_split*0.nii.gz -mul 0 ${TOPUP_DIR}/fnirt_field_split*0.nii.gz
-${FSL_LOCAL}/fslmaths ${TOPUP_DIR}/fnirt_field_split*2.nii.gz -mul 0 ${TOPUP_DIR}/fnirt_field_split*2.nii.gz
+	# Split Nonlinear Warp Field
+	${FSL_LOCAL}/fslsplit ${TOPUP_DIR}/fnirt_field.nii.gz ${TOPUP_DIR}/fnirt_field_split -t
 
-${FSL_LOCAL}/fslmerge -t ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-	${TOPUP_DIR}/fnirt_field_split*0.nii.gz \
-	${TOPUP_DIR}/fnirt_field_split*1.nii.gz \
-	${TOPUP_DIR}/fnirt_field_split*2.nii.gz
+	# Set all dimensions apart y to zero and recombine warp
+	${FSL_LOCAL}/fslmaths ${TOPUP_DIR}/fnirt_field_split*0.nii.gz -mul 0 ${TOPUP_DIR}/fnirt_field_split*0.nii.gz
+	${FSL_LOCAL}/fslmaths ${TOPUP_DIR}/fnirt_field_split*2.nii.gz -mul 0 ${TOPUP_DIR}/fnirt_field_split*2.nii.gz
 
-# Set Warpfield to relative convention
-echo "Forcing Warp to Relative"
-${FSL_LOCAL}/convertwarp \
-	-w ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-	-r ${TOPUP_DIR}/data_LR_reshape.nii.gz \
-	-o ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-	--relout
+	${FSL_LOCAL}/fslmerge -t ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
+		${TOPUP_DIR}/fnirt_field_split*0.nii.gz \
+		${TOPUP_DIR}/fnirt_field_split*1.nii.gz \
+		${TOPUP_DIR}/fnirt_field_split*2.nii.gz
 
-# Calculate Jacobian of new warpfield
-python3 ${SCRIPTS}/calc_jacobian.py \
-	--in ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-	--out ${TOPUP_DIR}/fnirt_field_only_y_jacobian.nii.gz
+	# Set Warpfield to relative convention
+	echo "Forcing Warp to Relative"
+	${FSL_LOCAL}/convertwarp \
+		-w ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
+		-r ${TOPUP_DIR}/data_LR_reshape.nii.gz \
+		-o ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
+		--relout
 
-# Apply Warp Field
-${FSL_LOCAL}/applywarp \
-	-i ${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
-	-r ${TOPUP_DIR}/data_LR_reshape.nii.gz \
-	-o ${TOPUP_DIR}/data_RL_reshape_shift_warp.nii.gz \
-	-w ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-	--interp=spline \
-	--datatype=float
+	# Calculate Jacobian of new warpfield
+	python3 ${SCRIPTS}/calc_jacobian.py \
+		--in ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
+		--out ${TOPUP_DIR}/fnirt_field_only_y_jacobian.nii.gz
 
-# Correct Warped Intensity with Jacobian Determinant
-${FSL_LOCAL}/fslmaths \
-	${TOPUP_DIR}/data_RL_reshape_shift_warp.nii.gz \
-	-mul ${TOPUP_DIR}/fnirt_field_only_y_jacobian.nii.gz \
-	${TOPUP_DIR}/data_RL_reshape_shift_warp_jac.nii.gz
+	# Apply Warp Field
+	${FSL_LOCAL}/applywarp \
+		-i ${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
+		-r ${TOPUP_DIR}/data_LR_reshape.nii.gz \
+		-o ${TOPUP_DIR}/data_RL_reshape_shift_warp.nii.gz \
+		-w ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
+		--interp=spline \
+		--datatype=float
+
+	# Correct Warped Intensity with Jacobian Determinant
+	${FSL_LOCAL}/fslmaths \
+		${TOPUP_DIR}/data_RL_reshape_shift_warp.nii.gz \
+		-mul ${TOPUP_DIR}/fnirt_field_only_y_jacobian.nii.gz \
+		${TOPUP_DIR}/data_RL_reshape_shift_warp_jac.nii.gz
 
 
-# Combine the corrected data and remove data artifacts from prior steps
-echo "Combine the corrected data and remove artifacts from prior steps"
-${FSL_LOCAL}/fslmerge -t \
-	${TOPUP_DIR}/data.nii.gz \
-	${TOPUP_DIR}/data_LR_reshape.nii.gz \
-	${TOPUP_DIR}/data_RL_reshape_shift_warp_jac.nii.gz
+	# Combine the corrected data
+	echo "Combine the corrected data"
+	${FSL_LOCAL}/fslmerge -t \
+		${TOPUP_DIR}/data.nii.gz \
+		${TOPUP_DIR}/data_LR_reshape.nii.gz \
+		${TOPUP_DIR}/data_RL_reshape_shift_warp_jac.nii.gz
 
+else 
+	echo "Combine the corrected data"
+	${FSL_LOCAL}/fslmerge -t \
+		${TOPUP_DIR}/data.nii.gz \
+		${TOPUP_DIR}/data_LR_reshape.nii.gz \
+		${TOPUP_DIR}/data_RL_reshape_shift.nii.gz
+
+fi 
+
+echo "Remove Artifacts from Prior Calculations"
 rm -rf ${TOPUP_DIR}/data_* ${TOPUP_DIR}/fnirt*
 
 # N4 Bias Correction
