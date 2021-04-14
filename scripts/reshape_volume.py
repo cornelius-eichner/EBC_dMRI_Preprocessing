@@ -93,7 +93,8 @@ def main():
 
     	data_swap = np.flip(data_swap, axis = 0)
 
-
+    aff_cust[3,3]=1
+    
     print('Custom Affine Tranformation Matrix\n{}\n'.format(aff_cust))
 
     # Save Swapped Data
