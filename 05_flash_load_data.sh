@@ -103,7 +103,7 @@ mrview \
 # Compare distortions between FLASH and 3DEPI Acqusitions
 fsleyes \
 	${FLASH_DIR_FA25}/data.nii.gz \
-	${REORIENT_DIR}/data_reshape.nii.gz
+	${REORIENT_DIR}/data_reshape.nii.gz &
 	 
 
 
