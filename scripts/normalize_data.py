@@ -78,6 +78,9 @@ def main():
 
         # Normalize Data
         data_norm = np.clip(mask[..., None] * (data[..., diff_mask] / data_b0_mean[..., None]), 0, 1)
+        # Concatenate mask as fake normalized b0
+        data_norm = np.concatenate((mask.astype(np.float)[...,None], data_norm), axis=3)
+
 
         # Clean Data from unwanted values
         data_norm[np.isnan(data_norm)] = 0
@@ -88,7 +91,9 @@ def main():
         data_norm_std = data_norm.std(axis = 3)
 
         bvals_norm = bvals[diff_mask]
+        bvals_norm = np.concatenate(([0], bvals_norm), axis=0)
         bvecs_norm = bvecs[:, diff_mask]
+        bvecs_norm = np.concatenate(([[0],[0],[0]], bvecs_norm), axis=1)
 
     # Save Data
     print('Saving Data')
