@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Load Local Variables
 source ./SET_VARIABLES.sh
 
