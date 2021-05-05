@@ -121,13 +121,41 @@ mrview \
 	-load ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
 	-interpolation 0 & 
 
+
+# Multiple rounds of N4 before mask generation
+echo 'Runing Repeated N4 on EPI b0 Data'
+for i in {1..4} 
+do 
+
+        current_iter_epi=${DIFF_DATA_DIR}/data_b0s_mc_mean_median_N4_${i}x.nii.gz
+        current_iter_epi_field=${DIFF_DATA_DIR}/field_data_b0s_mc_mean_median_N4_${i}x.nii.gz
+
+        if [ $i == 1 ]
+        then 
+                previous_iter_epi=${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz
+        else
+                previous_iter_epi=${DIFF_DATA_DIR}/data_b0s_mc_mean_median_N4_$( expr $i - 1 )x.nii.gz
+        fi
+
+        echo 'N4 EPI: Run '${i}
+
+        N4BiasFieldCorrection -d 3 \
+                -i $previous_iter_epi \
+                -o [$current_iter_epi,$current_iter_epi_field]
+
+
+done
+
+# Get initial mask threshold from average image intensity
+MASK_THRESHOLD=$(${FSL_LOCAL}/fslstats $current_iter_epi -m)
+
 MASKING_ANSWER="N"
 MASKING_DONE="N"
 while [ "$MASKING_DONE" == "N" ]; do
 
 	# Generate mask by thresholing the b0 volumes (FLS maths)
 	${FSL_LOCAL}/fslmaths \
-		${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+		$current_iter_epi \
 		-Tmean \
 		-kernel 3d \
 		-fmedian \
@@ -150,7 +178,7 @@ while [ "$MASKING_DONE" == "N" ]; do
 
 	# Check the results
 	mrview \
-		-load ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+		-load $current_iter_epi \
 		-interpolation 0  \
 		-mode 2 \
 		-overlay.load ${DIFF_DATA_DIR}/mask_fit_connect_dil.nii.gz \
@@ -166,7 +194,7 @@ while [ "$MASKING_DONE" == "N" ]; do
 	# Find THRESHOLD VALUE in a histogram
 	echo 'Adapt MASK_THRESHOLD Variable in SET_VARIABLES.sh to exclude noise peak in histogram'
 	python3 ${SCRIPTS}/quickviz.py \
-		--his ${DIFF_DATA_DIR}/data_b0s_mc_mean_median.nii.gz \
+		--his $current_iter_epi \
 		--loghis 
 
 	THRS_OLD=$MASK_THRESHOLD # Saving old threshold in variable for replacement in SET_VARIABLES.txt
