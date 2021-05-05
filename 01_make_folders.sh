@@ -33,7 +33,8 @@ mkdir -p  \
 	${FLASH_DIR_FA50} \
 	${FLASH_DIR_FA80} \
 	${FLASH_DIR_HIGHRES} \
-	${FLASH_DIR_ULTRA_HIGHRES} 
+	${FLASH_DIR_ULTRA_HIGHRES} \
+	${FLASH_DIR_WARP}
 
 
 echo $0 " Done" 
