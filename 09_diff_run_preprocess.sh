@@ -174,37 +174,6 @@ ${EDDY_PATH} \
 	--data_is_shelled \
 	-v
 
-if [ $FLAG_EPI_FLASH_CORR == "TRUE" ]
-then
-	echo "Estimate Distortion between EPI and FLASH Data using normalized eddy corrected files"
-
-	python3 ${SCRIPTS}/normalize_data.py \
-		--in ${EDDY_DIR}/eddy.nii.gz \
-		--mask ${DIFF_DATA_DIR}/mask.nii.gz \
-		--bval ${DIFF_DATA_DIR}/data.bval \
-		--bvec ${EDDY_DIR}/*bvecs \
-		--out_folder ${EDDY_DIR}
-
-	N4BiasFieldCorrection \
-		-i ${FLASH_DIR_FA25}/data.nii.gz \
-		-o [${EDDY_DIR}/FLASH_25_N4.nii.gz,${EDDY_DIR}/FLASH_25_N4_biasfield.nii.gz] \
-		-d 4 \
-		-v
-
-	# Fnirt EPI data to FLASH
-	${FSL_LOCAL}/fnirt \
-		--ref=${TOPUP_DIR}/data_LR_reshape.nii.gz \
-		--in=${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
-		--warpres=2,2,2 \
-		--infwhm=3,2,1,1 \
-		--reffwhm=4,2,0,0 \
-		--fout=${TOPUP_DIR}/fnirt_field.nii.gz \
-		--iout=${TOPUP_DIR}/fnirt_data.nii.gz \
-		-v
-
-
-
-
 
 # Move Eddy Fields to respective folder
 mv -f ${EDDY_DIR}/*displacement_fields* ${EDDY_FIELDS_DIR}/
