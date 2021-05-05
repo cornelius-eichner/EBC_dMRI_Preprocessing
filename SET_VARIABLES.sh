@@ -37,17 +37,17 @@ FLASH_ULTRA_HIGHRES=
 
 ####################################
 
-# Flag including an additional one-step nonlinear registration to 
-# correct for slightly distorted EPI scans compared to FLASH.
+# Flag including an additional one-step nonlinear registration to correct for slight distortions between FLASH and EPI scans
 # This issue was mitigated by a recent Bruker Patch
-FLAG_EPI_FLASH_CORR="" #TRUE/FALSE
+FLAG_FLASH_CORR="" #YES/NO
 
 
 # Use nonlinear registration to correct for non EPI traj adjusted reversed PE scans
 FLAG_TOPUP_RETRO_RECON="" #YES/NO
 RETRO_RECON_NUMBER=
 
-
+######
+# BASIC PARAMETERS, TYPICALLY SHOULD NOT CHANGE
 
 # Reorientation to MNI space
 RESHAPE_ARRAY_ORD="1,0,2"
