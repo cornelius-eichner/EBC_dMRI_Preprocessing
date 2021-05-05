@@ -10,8 +10,16 @@ source ${FSL_LOCAL}/etc/fslconf/fsl.sh
 # Copy nii files to topup directory
 echo "Copy nii files to topup directory"
 cp ${NII_RAW_DIR}/*X${TOPUP_LR_RUN}P1.nii.gz ${TOPUP_DIR}/data_LR.nii.gz
-cp ${NII_RAW_DIR}/*X${TOPUP_RL_RUN}P1.nii.gz ${TOPUP_DIR}/data_RL.nii.gz
 
+if [ $FLAG_TOPUP_RETRO_RECON == "NO" ]; then
+	cp ${NII_RAW_DIR}/*X${TOPUP_RL_RUN}P1.nii.gz ${TOPUP_DIR}/data_RL.nii.gz
+
+elif [[ $FLAG_TOPUP_RETRO_RECON == "YES" ]]; then
+	cp ${NII_RAW_DIR}/*X${TOPUP_RL_RUN}P${RETRO_RECON_NUMBER}.nii.gz ${TOPUP_DIR}/data_RL.nii.gz
+
+else
+	echo 'Please Specify $FLAG_TOPUP_RETRO_RECON'
+fi
 
 # Reshape image matrix to resemble MNI space
 echo "Reshape image matrix to resemble MNI space"
@@ -45,79 +53,13 @@ python3 ${SCRIPTS}/roll_align_data.py \
 	--out ${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
 	--axis 0
 
-if [ $FLAG_TOPUP_CORR == "TRUE" ]
-then
 
-	echo "Correct along read axis for different gradient trajectories"
-	${FSL_LOCAL}/fnirt \
-		--ref=${TOPUP_DIR}/data_LR_reshape.nii.gz \
-		--in=${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
-		--warpres=2,2,2 \
-		--infwhm=3,2,1,1 \
-		--reffwhm=4,2,0,0 \
-		--fout=${TOPUP_DIR}/fnirt_field.nii.gz \
-		--iout=${TOPUP_DIR}/fnirt_data.nii.gz \
-		-v
+echo "Combine the corrected data"
+${FSL_LOCAL}/fslmerge -t \
+	${TOPUP_DIR}/data.nii.gz \
+	${TOPUP_DIR}/data_LR_reshape.nii.gz \
+	${TOPUP_DIR}/data_RL_reshape_shift.nii.gz
 
-	# Split Nonlinear Warp Field
-	${FSL_LOCAL}/fslsplit ${TOPUP_DIR}/fnirt_field.nii.gz ${TOPUP_DIR}/fnirt_field_split -t
-
-	# Set all dimensions apart y to zero and recombine warp
-	${FSL_LOCAL}/fslmaths ${TOPUP_DIR}/fnirt_field_split*0.nii.gz -mul 0 ${TOPUP_DIR}/fnirt_field_split*0.nii.gz
-	${FSL_LOCAL}/fslmaths ${TOPUP_DIR}/fnirt_field_split*2.nii.gz -mul 0 ${TOPUP_DIR}/fnirt_field_split*2.nii.gz
-
-	${FSL_LOCAL}/fslmerge -t ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-		${TOPUP_DIR}/fnirt_field_split*0.nii.gz \
-		${TOPUP_DIR}/fnirt_field_split*1.nii.gz \
-		${TOPUP_DIR}/fnirt_field_split*2.nii.gz
-
-	# Set Warpfield to relative convention
-	echo "Forcing Warp to Relative"
-	${FSL_LOCAL}/convertwarp \
-		-w ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-		-r ${TOPUP_DIR}/data_LR_reshape.nii.gz \
-		-o ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-		--relout
-
-	# Calculate Jacobian of new warpfield
-	python3 ${SCRIPTS}/calc_jacobian.py \
-		--in ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-		--out ${TOPUP_DIR}/fnirt_field_only_y_jacobian.nii.gz
-
-	# Apply Warp Field
-	${FSL_LOCAL}/applywarp \
-		-i ${TOPUP_DIR}/data_RL_reshape_shift.nii.gz \
-		-r ${TOPUP_DIR}/data_LR_reshape.nii.gz \
-		-o ${TOPUP_DIR}/data_RL_reshape_shift_warp.nii.gz \
-		-w ${TOPUP_DIR}/fnirt_field_only_y.nii.gz \
-		--interp=spline \
-		--datatype=float
-
-	# Correct Warped Intensity with Jacobian Determinant
-	${FSL_LOCAL}/fslmaths \
-		${TOPUP_DIR}/data_RL_reshape_shift_warp.nii.gz \
-		-mul ${TOPUP_DIR}/fnirt_field_only_y_jacobian.nii.gz \
-		${TOPUP_DIR}/data_RL_reshape_shift_warp_jac.nii.gz
-
-
-	# Combine the corrected data
-	echo "Combine the corrected data"
-	${FSL_LOCAL}/fslmerge -t \
-		${TOPUP_DIR}/data.nii.gz \
-		${TOPUP_DIR}/data_LR_reshape.nii.gz \
-		${TOPUP_DIR}/data_RL_reshape_shift_warp_jac.nii.gz
-
-else 
-	echo "Combine the corrected data"
-	${FSL_LOCAL}/fslmerge -t \
-		${TOPUP_DIR}/data.nii.gz \
-		${TOPUP_DIR}/data_LR_reshape.nii.gz \
-		${TOPUP_DIR}/data_RL_reshape_shift.nii.gz
-
-fi 
-
-echo "Remove Artifacts from Prior Calculations"
-rm -rf ${TOPUP_DIR}/data_* ${TOPUP_DIR}/fnirt*
 
 # N4 Bias Correction
 N4BiasFieldCorrection \

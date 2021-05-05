@@ -44,7 +44,8 @@ FLAG_EPI_FLASH_CORR="" #TRUE/FALSE
 
 
 # Use nonlinear registration to correct for non EPI traj adjusted reversed PE scans
-FLAG_TOPUP_CORR="" #TRUE/FALSE
+FLAG_TOPUP_RETRO_RECON="" #YES/NO
+RETRO_RECON_NUMBER=
 
 
 
