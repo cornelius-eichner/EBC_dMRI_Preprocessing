@@ -58,7 +58,12 @@ mrview 	-mode 2 \
 # Detrending the tissue heating effect of increased diffusivity
 echo 'Signal Detrending'
 
-source ./SET_VARIABLES.sh
+python3 ${SCRIPTS}/drift_corr_data.py \
+	--in ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
+	--mask ${DIFF_DATA_DIR}/mask.nii.gz \
+	--bval ${DIFF_DATA_DIR}/data.bval \
+	--out ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr.nii.gz \
+
 
 if [[ ${HEAT_CORRECTION} == "YES" ]]
 then
@@ -66,10 +71,10 @@ then
 	python3 ${SCRIPTS}/signal_temp_equalizer.py \
 	--last 40 \
 	--mask ${DIFF_DATA_DIR}/mask.nii.gz \
-	${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
+	${DIFF_DATA_DIR}/data_debias_denoise_driftcorr.nii.gz \
 	${DIFF_DATA_DIR}/data.bval \
 	${DIFF_DATA_DIR}/data.bvec \
-	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+	${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz \
 	${DIFF_DATA_DIR}/computed_ks.nii.gz
 
 	# The second volume of computed_ks.nii.gz can be a good estimator for a WM mask, extract this volume and run again
@@ -108,16 +113,16 @@ then
 	python3 ${SCRIPTS}/signal_temp_equalizer.py \
 		--last 40 \
 		--mask ${DIFF_DATA_DIR}/wm_mask.nii.gz \
-		${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
+		${DIFF_DATA_DIR}/data_debias_denoise_driftcorr.nii.gz \
 		${DIFF_DATA_DIR}/data.bval \
 		${DIFF_DATA_DIR}/data.bvec \
-		${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+		${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz \
 		${DIFF_DATA_DIR}/computed_ks.nii.gz
 
 elif [[ ${HEAT_CORRECTION} == "NO" ]]
 then 
 	echo 'Skiping Heat Correction'
-	cp -f ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz ${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz
+	cp -f ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr.nii.gz ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz
 fi
 
 #
@@ -140,7 +145,7 @@ python3 ${SCRIPTS}/make_fake_eddy_files.py \
 
 # For unknown reasons, ANTS N4 expects a 4D mask for N4, creating 4D mask using fslmaths
 ${FSL_LOCAL}/fslmaths \
-	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+	${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz \
 	-mas ${DIFF_DATA_DIR}/mask.nii.gz \
 	-bin \
 	${DIFF_DATA_DIR}/mask_4D.nii.gz \
@@ -148,7 +153,7 @@ ${FSL_LOCAL}/fslmaths \
 
 # Estimate N4 Bias Correction of Median B0 Data
 N4BiasFieldCorrection \
-	-i ${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
+	-i ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz \
 	-x ${DIFF_DATA_DIR}/mask_4D.nii.gz \
 	-o [${DIFF_DATA_N4_DIR}/data_N4.nii.gz,${DIFF_DATA_N4_DIR}/N4_biasfield.nii.gz] \
 	-d 4 \
@@ -186,8 +191,8 @@ mrview -mode 2 \
 # Split original data
 echo "Splitting dataset to specified out_folder" 
 ${FSL_LOCAL}/fslsplit \
-	${DIFF_DATA_DIR}/data_debias_denoise_detrend.nii.gz \
-	${DIFF_DATA_DIR}/split/
+	${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz \
+	${SPLIT_DIR} \
 
 # Force Warp Fields Relative and Calculate Jacobian Determinant
 echo "Converting Warp Fields to Relative Convention" 
@@ -220,7 +225,7 @@ python3 ${SCRIPTS}/warp_data.py \
 echo "Stitching together Measurements" 
 ${FSL_LOCAL}/fslmerge \
 	-t \
-	${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz \
+	${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_eddy.nii.gz \
 	${SPLIT_WARPED_DIR}/*nii.gz
 
 #
@@ -232,7 +237,7 @@ ${FSL_LOCAL}/fslmerge \
 
 echo 'DTI Fit for Quality Control'
 
-${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz \
+${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_eddy.nii.gz \
 					-m ${DIFF_DATA_DIR}/mask.nii.gz \
 					-r ${DIFF_DATA_DIR}/data.bvec \
 					-b ${DIFF_DATA_DIR}/data.bval \
@@ -248,7 +253,7 @@ fsleyes ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_V1*
 
 ####################################
 # Copy corrected data to release folder
-cp ${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz ${DIFF_DATA_RELEASE_DIR}/data.nii.gz
+cp ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_eddy.nii.gz ${DIFF_DATA_RELEASE_DIR}/data.nii.gz
 cp ${DIFF_DATA_DIR}/mask.nii.gz ${DIFF_DATA_RELEASE_DIR}/mask.nii.gz
 cp ${DIFF_DATA_DIR}/data.bval ${DIFF_DATA_RELEASE_DIR}/data.bval
 cp ${EDDY_DIR}/*bvecs ${DIFF_DATA_RELEASE_DIR}/data.bvec
@@ -260,7 +265,7 @@ cp ${EDDY_DIR}/*bvecs ${DIFF_DATA_RELEASE_DIR}/data.bvec
 echo 'Normalize Data with b0'
 
 python3 ${SCRIPTS}/normalize_data.py \
-	--in ${DIFF_DATA_DIR}/data_debias_denoise_detrend_eddy.nii.gz \
+	--in ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_eddy.nii.gz \
 	--mask ${DIFF_DATA_DIR}/mask.nii.gz \
 	--bval ${DIFF_DATA_DIR}/data.bval \
 	--bvec ${EDDY_DIR}/*bvecs \
