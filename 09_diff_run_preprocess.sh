@@ -119,8 +119,7 @@ then
 		${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz \
 		${DIFF_DATA_DIR}/computed_ks.nii.gz
 
-elif [[ ${HEAT_CORRECTION} == "NO" ]]
-then 
+else
 	echo 'Skiping Heat Correction'
 	cp -f ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr.nii.gz ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend.nii.gz
 fi
