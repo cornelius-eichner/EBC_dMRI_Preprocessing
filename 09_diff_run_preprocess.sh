@@ -241,7 +241,7 @@ ${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_ed
 					-r ${DIFF_DATA_DIR}/data.bvec \
 					-b ${DIFF_DATA_DIR}/data.bval \
 					-o ${DTI_DIR}/dti \
-					-w -V
+					-w -V --save_tensor 
 
 # Create a scaled FA image for improved visualization contrast
 fsleyes ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_V1* 
