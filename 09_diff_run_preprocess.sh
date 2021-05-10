@@ -252,7 +252,7 @@ fsleyes ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_V1*
 
 ####################################
 # Copy corrected data to release folder
-${FSL_LOCAL}/dtifit ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_eddy.nii.gz ${DIFF_DATA_RELEASE_DIR}/data.nii.gz -odt float
+${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_debias_denoise_driftcorr_detrend_eddy.nii.gz ${DIFF_DATA_RELEASE_DIR}/data.nii.gz -odt float
 cp ${DIFF_DATA_DIR}/mask.nii.gz ${DIFF_DATA_RELEASE_DIR}/mask.nii.gz
 cp ${DIFF_DATA_DIR}/data.bval ${DIFF_DATA_RELEASE_DIR}/data.bval
 cp ${EDDY_DIR}/*bvecs ${DIFF_DATA_RELEASE_DIR}/data.bvec
