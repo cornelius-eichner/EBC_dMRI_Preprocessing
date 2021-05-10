@@ -97,9 +97,9 @@ def main():
 
     # Save Data
     print('Saving Data')
-    nib.save(nib.Nifti1Image(np.clip(data_norm, 0, 1), aff).astype(np.float32), PATH_OUT + 'data_norm.nii.gz')
-    nib.save(nib.Nifti1Image(np.clip(data_norm_mean, 0, 1), aff).astype(np.float32), PATH_OUT + 'data_norm_mean.nii.gz')
-    nib.save(nib.Nifti1Image(np.clip(data_norm_std, 0, 1), aff).astype(np.float32), PATH_OUT + 'data_norm_std.nii.gz')
+    nib.save(nib.Nifti1Image(np.clip(data_norm, 0, 1).astype(np.float32), aff), PATH_OUT + 'data_norm.nii.gz')
+    nib.save(nib.Nifti1Image(np.clip(data_norm_mean, 0, 1).astype(np.float32), aff), PATH_OUT + 'data_norm_mean.nii.gz')
+    nib.save(nib.Nifti1Image(np.clip(data_norm_std, 0, 1).astype(np.float32), aff), PATH_OUT + 'data_norm_std.nii.gz')
     
     np.savetxt(PATH_OUT + 'data_norm.bval', bvals_norm, fmt = '%.5f')
     np.savetxt(PATH_OUT + 'data_norm.bvec', bvecs_norm, fmt = '%.5f')
