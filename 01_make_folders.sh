@@ -21,7 +21,8 @@ mkdir -p \
 	${REORIENT_DIR} \
 	${SPLIT_DIR} \
 	${SPLIT_WARPED_DIR} \
-	${TOPUP_DIR} 
+	${TOPUP_DIR} \
+	${TISSUE_SEGMENTATION_DIR}
 
 
 # Generate FLASH FOLDERS
