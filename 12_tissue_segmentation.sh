@@ -198,3 +198,45 @@ python3 ${SCRIPTS}/fuzzysegmentation.py \
 	${TISSUE_SEGMENTATION_DIR}/flash_contr5_warp.nii.gz \
 	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
 	${TISSUE_SEGMENTATION_DIR}'/' 4
+
+echo 'Run fuzzy 2-class segmentation without FA'
+python3 ${SCRIPTS}/fuzzysegmentation.py \
+	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+	$current_iter_b0 \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr2_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr3_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr4_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr5_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}'/noFA_' 2
+
+echo 'Run fuzzy 3-class segmentation without FA'
+python3 ${SCRIPTS}/fuzzysegmentation.py \
+	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+	$current_iter_b0 \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr2_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr3_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr4_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr5_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}'/noFA_' 3
+
+echo 'Run fuzzy 4-class segmentation without FA'
+python3 ${SCRIPTS}/fuzzysegmentation.py \
+	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+	$current_iter_b0 \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr2_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr3_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr4_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/flash_contr5_warp.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}/mask.nii.gz \
+	${TISSUE_SEGMENTATION_DIR}'/noFA_' 4
