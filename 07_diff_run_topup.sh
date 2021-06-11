@@ -75,7 +75,7 @@ do
 
         echo 'N4 b0 dMRI: Run '${i}
 
-        N4BiasFieldCorrection -d 3 \
+        N4BiasFieldCorrection -d 4 \
                 -i ${PREVIOUS_ITER_B0} \
                 -o ${CURRENT_ITER_B0}
 done
