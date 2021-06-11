@@ -61,17 +61,38 @@ ${FSL_LOCAL}/fslmerge -t \
 	${TOPUP_DIR}/data_RL_reshape_shift.nii.gz
 
 
-# N4 Bias Correction
-N4BiasFieldCorrection \
-	-i ${TOPUP_DIR}/data.nii.gz \
-	-o [${TOPUP_DIR}/data_N4.nii.gz,${TOPUP_DIR}/N4_biasfield.nii.gz] \
-	-d 4 \
-	-v
+echo "Runing Multiple N4 on dMRI b0 Data"
+for i in {1..3} 
+do 
+        CURRENT_ITER_B0=${TOPUP_DIR}/data_N4_${i}x.nii.gz
+
+        if [ $i == 1 ]
+        then 
+                PREVIOUS_ITER_B0=${TOPUP_DIR}/data.nii.gz
+        else
+                PREVIOUS_ITER_B0=${TOPUP_DIR}/data_N4_$( expr $i - 1 )x.nii.gz
+        fi
+
+        echo 'N4 b0 dMRI: Run '${i}
+
+        N4BiasFieldCorrection -d 3 \
+                -i ${PREVIOUS_ITER_B0} \
+                -o ${CURRENT_ITER_B0}
+done
+
+
+# Display Topup Corrected Data
+echo "Show Data for Topup"
+mrview \
+	-load ${CURRENT_ITER_B0} \
+	-interpolation 0 \
+	-mode 2 &
+
 
 # Run Topup Algorithm
 echo "Run Topup Algorithm"
 ${FSL_LOCAL}/topup \
-	--imain=${TOPUP_DIR}/data_N4.nii.gz \
+	--imain=${CURRENT_ITER_B0} \
 	--datain=${CONFIG_DIR}/topup/acqp \
 	--config=${CONFIG_DIR}/topup/b02b0.cnf \
 	--out=${TOPUP_DIR}/topup \
@@ -82,7 +103,7 @@ ${FSL_LOCAL}/topup \
 # Display Topup Corrected Data
 echo "Show Corrected Data"
 mrview \
-	-load ${TOPUP_DIR}/data_N4.nii.gz \
+	-load ${CURRENT_ITER_B0} \
 	-interpolation 0 \
 	-load ${TOPUP_DIR}/data_unwarp.nii.gz \
 	-interpolation 0 \
