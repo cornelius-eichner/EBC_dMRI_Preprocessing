@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load Local Variables
-source ./SET_VARIABLES_local.sh
+source ./SET_VARIABLES.sh
 
 cp ${FLASH_DIR_FA05}/data.nii.gz ${FLASH_DIR_WARP}/data_flash.nii.gz
 
