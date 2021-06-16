@@ -12,7 +12,7 @@ from dipy.core.gradients import gradient_table
 from dipy.io.gradients import read_bvals_bvecs
 from dipy.reconst.shm import CsaOdfModel
 
-from exvivo_odf_sharpening.shconv import convert_sh_basis
+from shconv import convert_sh_basis
 
 
 def main(dwipath, bvalpath, bvecpath, maskpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.006, shmax=6):
@@ -95,5 +95,5 @@ if __name__ == "__main__":
     # tau is the minimal signal cutoff
     # lambda_ is the laplace-beltrami normalization weight
     # shmax is the spherical harmonic maximum order
-    print('dwipath, bvalpath, bvecpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.006, shmax=6')
+    # print('dwipath, bvalpath, bvecpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.006, shmax=6')
     main(*sys.argv[1:])
