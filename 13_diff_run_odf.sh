@@ -33,3 +33,40 @@ do
 done
 
 
+echo 'Extracting Peaks'
+mkdir -p ${ODF_DIR}/peaks_ratios
+
+for RATIO in ${RATIOS[@]};
+do
+    echo 'Extracting peaks from sharpened Ratio '${RATIO}
+    python3 ${SCRIPTS}/peak_extraction.py \
+            ${ODF_DIR}/sharpen_ratios/csa_sharp_r${RATIO}.nii.gz \
+            ${ODF_DIR}/peaks_ratios/nufo_csa_sharp_r${RATIO}.nii.gz \
+            ${ODF_DIR}/peaks_ratios/dir_csa_sharp_r${RATIO}.nii.gz \
+            ${ODF_DIR}/peaks_ratios/len_csa_sharp_r${RATIO}.nii.gz \
+            --relth 0.25 --minsep 25 --maxn 10 \
+            --mask ${DIFF_DATA_DIR}/mask.nii.gz
+
+done
+
+
+echo 'Computing AIC for all peaks approximation'
+mkdir -p ${ODF_DIR}/aic_ratios
+
+for RATIO in ${RATIOS[@]};
+do
+    echo 'AIC from sharpened Ratio '${RATIO}
+    python3 ${SCRIPTS}/compute_aic_all_peaks.py \
+            --data ${DIFF_DATA_NORM_RELEASE_DIR}/data_norm.nii.gz \
+            --bval ${DIFF_DATA_NORM_RELEASE_DIR}/data_norm.bval \
+            --bvec ${DIFF_DATA_NORM_RELEASE_DIR}/data_norm.bvec \
+            --mask ${DIFF_DATA_DIR}/mask.nii.gz \
+            --inufo ${ODF_DIR}/peaks_ratios/nufo_csa_sharp_r${RATIO}.nii.gz \
+            --idirs ${ODF_DIR}/peaks_ratios/dir_csa_sharp_r${RATIO}.nii.gz \
+            --ilen ${ODF_DIR}/peaks_ratios/len_csa_sharp_r${RATIO}.nii.gz \
+            --sigma ${NOISEMAP_DIR}/sigma_norm.nii.gz
+            --ratio ${RATIO} \
+            --oaic ${ODF_DIR}/aic_ratios/aic_csa_sharp_r${RATIO}.nii.gz \
+            --cores ${N_CORES}
+done
+
