@@ -27,6 +27,7 @@ do
             --in ${ODF_DIR}/csa.nii.gz \
             --out ${ODF_DIR}/sharpen_ratios/csa_sharp_r${RATIO}.nii.gz \
             --mask ${DIFF_DATA_DIR}/mask.nii.gz \
+            --ratio ${RATIO} \
             --tau 0.1 --lambda 1. --csa_norm True \
             --cores ${N_CORES}
 done
