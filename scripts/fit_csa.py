@@ -86,7 +86,7 @@ def main(dwipath, bvalpath, bvecpath, maskpath, outputpath, NCORE=1, tau=1e-5, l
 
 if __name__ == "__main__":
     import sys
-    print('args:')
+    # print('args:')
     # dwipath is path to normalized DWI with first volume as a brain mask
     # bvalpath is path to rounded bvals
     # bvecpath is path to normalized bvecs
