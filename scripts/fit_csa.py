@@ -15,7 +15,7 @@ from dipy.reconst.shm import CsaOdfModel
 from exvivo_odf_sharpening.shconv import convert_sh_basis
 
 
-def main(dwipath, bvalpath, bvecpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.006, shmax=6):
+def main(dwipath, bvalpath, bvecpath, maskpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.006, shmax=6):
 
 	NCORE = int(NCORE)
 	tau = float(tau)
@@ -45,8 +45,8 @@ def main(dwipath, bvalpath, bvecpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.0
 
 
 	# sphere for conversion for sh conversion to tournier format
-	# using repulsion100 because we expect sh_order 8 or less
-	sphere_conv = get_sphere('repulsion100')
+	# using repulsion200 because we expect sh_order 8 or less
+	sphere_conv = get_sphere('repulsion200')
 
 	gtab = gradient_table(bvals, bvecs)
 
@@ -54,8 +54,12 @@ def main(dwipath, bvalpath, bvecpath, outputpath, NCORE=1, tau=1e-5, lambda_=0.0
 	data = data_img.get_fdata()
 	affine = data_img.affine
 	print('This script expect normalized dwi data')
-	print('This script assumes the first volume is a brain mask')
-	mask = data[..., 0].astype(np.bool)
+
+
+	# print('This script assumes the first volume is a brain mask')
+	# mask = data[..., 0].astype(np.bool)
+
+	mask = nib.load(maskpath).get_fdata().astype(np.bool)
 
 
 	# CSA model
