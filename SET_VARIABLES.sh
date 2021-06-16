@@ -92,6 +92,7 @@ SPLIT_DIR=${DIFF_DATA_DIR}/split/
 SPLIT_WARPED_DIR=${DIFF_DATA_DIR}/split_warped/
 TOPUP_DIR="${DIFF_DIR}/topup/"
 TISSUE_SEGMENTATION_DIR="${DIFF_DIR}/segmentation/"
+ODF_DIR="${DIFF_DIR}/odf/"
 
 # FLASH Data Folder Variables
 FLASH_DIR="${LOCAL_DIR}/flash/"
