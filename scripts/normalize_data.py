@@ -14,6 +14,12 @@ def buildArgsParser():
     p = argparse.ArgumentParser(description=DESCRIPTION)
     p.add_argument('--in', dest='input', action='store', type=str,
                             help='Input Data Path')
+
+    p.add_argument('--in_sigma', dest='input_sigma', action='store', type=str,
+                            help='Input sigma Path')
+
+    p.add_argument('--in_N', dest='input_N', action='store', type=str,
+                            help='Input N Path')
     
     p.add_argument('--mask', dest='mask', action='store', type=str,
                                 help='Mask Path')
@@ -38,9 +44,11 @@ def main():
 
     # Load input variables
     PATH_IN     = os.path.realpath(args.input)
-    PATH_MASK     = os.path.realpath(args.mask)
-    PATH_BVAL    = os.path.realpath(args.bval)
-    PATH_BVEC    = os.path.realpath(args.bvec)
+    PATH_SIGMA  = os.path.realpath(args.input_sigma)
+    PATH_N      = os.path.realpath(args.input_N)
+    PATH_MASK   = os.path.realpath(args.mask)
+    PATH_BVAL   = os.path.realpath(args.bval)
+    PATH_BVEC   = os.path.realpath(args.bvec)
     PATH_OUT    = os.path.realpath(args.out_fol) + '/'
 
     # Load Data
@@ -48,6 +56,9 @@ def main():
     data = nib.load(PATH_IN).get_fdata()
     aff = nib.load(PATH_IN).affine
     dims = data.shape
+
+    sigmas = nib.load(PATH_SIGMA).get_fdata()
+    Ns = nib.load(PATH_N).get_fdata()
 
     mask = nib.load(PATH_MASK).get_fdata().astype(np.bool)
 
@@ -95,11 +106,23 @@ def main():
         bvecs_norm = bvecs[:, diff_mask]
         bvecs_norm = np.concatenate(([[0],[0],[0]], bvecs_norm), axis=1)
 
+
+    # compute stable sigma estimation and normalize
+    sigma_stable = sigmas*Ns / np.mean(Ns)
+    sigma_norm = sigma_stable / data_b0_mean
+
+    # cleanup sigma
+    sigma_norm[~mask] = 0
+    sigma_norm[np.isnan(sigma_norm)] = 0
+    sigma_norm[np.isinf(sigma_norm)] = 0
+
+
     # Save Data
     print('Saving Data')
     nib.save(nib.Nifti1Image(np.clip(data_norm, 0, 1).astype(np.float32), aff), PATH_OUT + 'data_norm.nii.gz')
     nib.save(nib.Nifti1Image(np.clip(data_norm_mean, 0, 1).astype(np.float32), aff), PATH_OUT + 'data_norm_mean.nii.gz')
     nib.save(nib.Nifti1Image(np.clip(data_norm_std, 0, 1).astype(np.float32), aff), PATH_OUT + 'data_norm_std.nii.gz')
+    nib.save(nib.Nifti1Image(np.clip(sigma_norm, 0, 1).astype(np.float32), aff), PATH_OUT + 'sigma_norm.nii.gz')
     
     np.savetxt(PATH_OUT + 'data_norm.bval', bvals_norm, fmt = '%.5f')
     np.savetxt(PATH_OUT + 'data_norm.bvec', bvecs_norm, fmt = '%.5f')
