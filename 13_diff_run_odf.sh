@@ -64,9 +64,61 @@ do
             --inufo ${ODF_DIR}/peaks_ratios/nufo_csa_sharp_r${RATIO}.nii.gz \
             --idirs ${ODF_DIR}/peaks_ratios/dir_csa_sharp_r${RATIO}.nii.gz \
             --ilen ${ODF_DIR}/peaks_ratios/len_csa_sharp_r${RATIO}.nii.gz \
-            --sigma ${NOISEMAP_DIR}/sigma_norm.nii.gz
+            --sigma ${NOISEMAP_DIR}/sigma_norm.nii.gz \
             --ratio ${RATIO} \
             --oaic ${ODF_DIR}/aic_ratios/aic_csa_sharp_r${RATIO}.nii.gz \
             --cores ${N_CORES}
 done
+
+
+# stack odf and aic filename in a list, in order of increasing ratios
+declare -a ODFFILELIST
+declare -a AICFILELIST
+for RATIO in ${RATIOS[@]};
+do
+    TMPODFFILE=${ODF_DIR}/sharpen_ratios/csa_sharp_r${RATIO}.nii.gz;
+    ODFFILELIST[${#ODFFILELIST[@]}+1]=$TMPODFFILE;
+    TMPAICFILE=${ODF_DIR}/aic_ratios/aic_csa_sharp_r${RATIO}.nii.gz;
+    AICFILELIST[${#AICFILELIST[@]}+1]=$TMPAICFILE;
+done
+
+
+# # Picks the ratio with lowest AIC for each voxel
+# python3 ${SCRIPTS}/combine_aic.py \
+#         --iaic ${AICFILELIST[@]} \
+#         --iodf ${ODFFILELIST[@]} \
+#         --mask ${DIFF_DATA_DIR}/mask.nii.gz \
+#         --ratios ${RATIOS[@]} \
+#         --oodf ${ODF_DIR}/best_voxelwise_aic_odf.nii.gz \
+#         --oaic ${ODF_DIR}/aic_ratios/best_voxelwise_aic_aic.nii.gz \
+#         --oratio ${ODF_DIR}/best_voxelwise_aic_ratio.nii.gz
+
+
+
+# Picks the ratio with lowest AIC for each voxel
+python3 ${SCRIPTS}/combine_aic_neigh.py \
+        --iaic ${AICFILELIST[@]} \
+        --iodf ${ODFFILELIST[@]} \
+        --mask ${DIFF_DATA_DIR}/mask.nii.gz \
+        --ratios ${RATIOS[@]} \
+        --oodf ${ODF_DIR}/best_neighborhood_aic_odf.nii.gz \
+        --oaic ${ODF_DIR}/aic_ratios/best_neighborhood_aic_aic.nii.gz \
+        --oratio ${ODF_DIR}/best_neighborhood_aic_ratio.nii.gz
+
+
+echo 'Extracting peaks from best AIC ODFs'
+python3 ${SCRIPTS}/peak_extraction.py \
+        ${ODF_DIR}/best_neighborhood_aic_odf.nii.gz \
+        ${ODF_DIR}/nufo_best_aic.nii.gz \
+        ${ODF_DIR}/dir_best_aic.nii.gz \
+        ${ODF_DIR}/len_best_aic.nii.gz \
+        --relth 0.25 --minsep 25 --maxn 10 \
+        --mask ${DIFF_DATA_DIR}/mask.nii.gz
+
+
+echo 'Normalize ODF'
+python3 ${SCRIPTS}/sh_odf_normalize.py \
+        ${ODF_DIR}/best_neighborhood_aic_odf.nii.gz \
+        ${ODF_DIR}/odf_best_aic_normalized.nii.gz
+
 
