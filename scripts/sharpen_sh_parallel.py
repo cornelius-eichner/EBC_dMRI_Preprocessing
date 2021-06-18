@@ -88,7 +88,7 @@ def main():
     start_time = time()
     sh_csd_sharp = odf_sh_to_sharp_parallel(sh, reg_sphere, mask=mask, basis='tournier07', ratio=1/ratio_csd_sharp, sh_order=sh_order_sharp, lambda_=lambda_csd_sharp, tau=tau_csd_sharp, r2_term=solid_angle_norm, maxprocess=NCORE)
     end_time = time()
-    print('Elapsed time (csd sharpening) = {:.2f} s'.format(end_time - start_time))
+    print('Elapsed time = {:.2f} s'.format(end_time - start_time))
 
 
 

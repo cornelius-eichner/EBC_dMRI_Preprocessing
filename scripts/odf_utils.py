@@ -8,6 +8,9 @@ from numpy.lib.scimath import sqrt
 
 from scipy.interpolate import interp1d
 
+from numpy.lib.stride_tricks import as_strided
+import numbers
+
 ## PEAKS
 
 def peak_directions_vol(odfs, sphere, relative_peak_threshold=0.25, min_separation_angle=15, mask=None):
@@ -191,6 +194,82 @@ def true_MD_func(meanbval, ratio, minMD, maxMD, N_MD=1000):
 	MDs = np.linspace(minMD, maxMD, N_MD)
 	SMs = np.array([SM_from_param(meanbval, MD, ratio) for MD in MDs])
 	return interp1d(SMs, MDs, bounds_error=False, fill_value=(minMD, maxMD))
+
+
+
+
+
+
+# Stolen from https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/feature_extraction/image.py
+def extract_patches(arr, patch_shape, extraction_step, flatten=True):
+    """Extracts patches of any n-dimensional array in place using strides.
+    Given an n-dimensional array it will return a 2n-dimensional array with
+    the first n dimensions indexing patch position and the last n indexing
+    the patch content. This operation is immediate (O(1)). A reshape
+    performed on the first n dimensions will cause numpy to copy data, leading
+    to a list of extracted patches.
+    Parameters
+    ----------
+    arr : ndarray
+        n-dimensional array of which patches are to be extracted
+    patch_shape : integer or tuple of length arr.ndim
+        Indicates the shape of the patches to be extracted. If an
+        integer is given, the shape will be a hypercube of
+        sidelength given by its value.
+    extraction_step : integer or tuple of length arr.ndim
+        Indicates step size at which extraction shall be performed.
+        If integer is given, then the step is uniform in all dimensions.
+    Returns
+    -------
+    patches : strided ndarray
+        2n-dimensional array indexing patches on first n dimensions and
+        containing patches on the last n dimensions. These dimensions
+        are fake, but this way no data is copied. A simple reshape invokes
+        a copying operation to obtain a list of patches:
+        result.reshape([-1] + list(patch_shape))
+    """
+
+    arr_ndim = arr.ndim
+
+    if isinstance(patch_shape, numbers.Number):
+        patch_shape = tuple([patch_shape] * arr_ndim)
+    if isinstance(extraction_step, numbers.Number):
+        extraction_step = tuple([extraction_step] * arr_ndim)
+
+    patch_strides = arr.strides
+
+    slices = tuple(slice(None, None, st) for st in extraction_step)
+    indexing_strides = arr[slices].strides
+
+    patch_indices_shape = ((np.array(arr.shape) - np.array(patch_shape)) //
+                           np.array(extraction_step)) + 1
+
+    shape = tuple(list(patch_indices_shape) + list(patch_shape))
+    strides = tuple(list(indexing_strides) + list(patch_strides))
+
+    patches = as_strided(arr, shape=shape, strides=strides)
+
+    if flatten:
+        patches = patches.reshape([-1] + list(patch_shape))
+
+    return patches
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

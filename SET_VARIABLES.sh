@@ -72,7 +72,7 @@ LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 
 # Check the number of available cores for parallel processing
-N_CORES=4
+N_CORES=48
 
 ########################
 # Local Folders for Processing
