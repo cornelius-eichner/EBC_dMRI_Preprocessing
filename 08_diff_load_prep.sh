@@ -2,7 +2,6 @@
 
 # Load Local Variables
 source ./SET_VARIABLES.sh
-source ./SET_VARIABLES_local.sh
 
 
 ####################################
