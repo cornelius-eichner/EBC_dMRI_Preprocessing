@@ -119,6 +119,6 @@ python3 ${SCRIPTS}/peak_extraction.py \
 echo 'Normalize ODF'
 python3 ${SCRIPTS}/sh_odf_normalize.py \
         ${ODF_DIR}/odf_best_neighborhood_aic.nii.gz \
-        ${ODF_DIR}/odf_best_neighborhood_aic_normalized.nii.gz
+        ${ODF_DIR}/odf_norm_best_neighborhood_aic.nii.gz
 
 
