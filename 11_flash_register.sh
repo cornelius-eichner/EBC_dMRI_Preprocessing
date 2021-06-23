@@ -108,11 +108,17 @@ mv -f ${FLASH_DIR_WARP}/mask_flash_connect_dil.nii.gz ${FLASH_DIR_WARP}/mask_fla
 rm -f ${FLASH_DIR_WARP}/mask_flash_*.nii.gz
 
 
-# Copy the EPI Data to the FLASH unwarp folder
-cp ${DIFF_DATA_DIR}/mask.nii.gz ${FLASH_DIR_WARP}/mask_epi.nii.gz
-echo 'Averaging Topup Warp Data for EPI Reference'
+echo 'Extracting and averaging b0s from Final Release dMRI Data'
+# Extract b0 volumes
+dwiextract \
+        -force \
+        -bzero \
+        -fslgrad ${DIFF_DATA_DIR}/data.bvec ${DIFF_DATA_DIR}/data.bval_round \
+        ${DIFF_DATA_RELEASE_DIR}/data.nii.gz \
+        ${FLASH_DIR_WARP}/data_b0s.nii.gz
+
 ${FSL_LOCAL}/fslmaths \
-        ${TOPUP_DIR}/data_unwarp.nii.gz \
+        ${FLASH_DIR_WARP}/data_b0s.nii.gz \
         -Tmean \
         ${FLASH_DIR_WARP}/data_epi.nii.gz
 

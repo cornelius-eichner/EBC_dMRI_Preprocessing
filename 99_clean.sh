@@ -11,15 +11,15 @@ source ./SET_VARIABLES.sh
 echo "Removing intermedidate calculation folders"
 
 rm -rf \
-	${DIFF_DATA_N4_DIR} \
-	${EDDY_DIR} \
-	${EDDY_FIELDS_DIR} \
-	${EDDY_FIELDS_REL_DIR} \
-	${EDDY_FIELDS_JAC_DIR} \
-	${NII_RAW_DIR} \
-	${REORIENT_DIR} \
-	${SPLIT_DIR} \
-	${SPLIT_WARPED_DIR} \
+    ${DIFF_DATA_N4_DIR} \
+    ${EDDY_DIR} \
+    ${EDDY_FIELDS_DIR} \
+    ${EDDY_FIELDS_REL_DIR} \
+    ${EDDY_FIELDS_JAC_DIR} \
+    ${NII_RAW_DIR} \
+    ${REORIENT_DIR} \
+    ${SPLIT_DIR} \
+    ${SPLIT_WARPED_DIR} \
 
 
 echo $0 " Done" 

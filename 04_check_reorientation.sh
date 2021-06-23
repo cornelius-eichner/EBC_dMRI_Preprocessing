@@ -11,11 +11,11 @@ cp ${NII_RAW_DIR}/*X${CHECK_REORIENT_SCAN}P1.nii.gz ${REORIENT_DIR}/data.nii.gz
 # Reshape image matrix to resemble MNI space
 echo "Reshape image matrix to resemble MNI space"
 python3 ${SCRIPTS}/reshape_volume.py \
-	--in ${REORIENT_DIR}/data.nii.gz \
-	--out ${REORIENT_DIR}/data_reshape.nii.gz \
-	--ord ${RESHAPE_ARRAY_ORD} \
-	--inv ${RESHAPE_ARRAY_INV} \
-	--res ${RES}
+    --in ${REORIENT_DIR}/data.nii.gz \
+    --out ${REORIENT_DIR}/data_reshape.nii.gz \
+    --ord ${RESHAPE_ARRAY_ORD} \
+    --inv ${RESHAPE_ARRAY_INV} \
+    --res ${RES}
 
 # Print data header information
 mrinfo ${REORIENT_DIR}/data.nii.gz 
@@ -37,9 +37,9 @@ sed -i "s/$DATA_RESCALING_STR_OLD/$DATA_RESCALING_STR_NEW/gi" ./SET_VARIABLES.sh
 mv -f ${REORIENT_DIR}/data_reshape.nii.gz ${REORIENT_DIR}/data_reshape_unscaled.nii.gz 
 
 ${FSL_LOCAL}/fslmaths ${REORIENT_DIR}/data_reshape_unscaled.nii.gz \
-	-div ${DATA_RESCALING} \
-	${REORIENT_DIR}/data_reshape.nii.gz \
-	-odt float 
+    -div ${DATA_RESCALING} \
+    ${REORIENT_DIR}/data_reshape.nii.gz \
+    -odt float 
 
 #
 ##################
@@ -47,14 +47,14 @@ ${FSL_LOCAL}/fslmaths ${REORIENT_DIR}/data_reshape_unscaled.nii.gz \
 
 # Show reoriented data alongside with MNI brain
 mrview \
-	-load ${REORIENT_DIR}/data_reshape.nii.gz \
-	-interpolation 0  \
-	-mode 2 &
+    -load ${REORIENT_DIR}/data_reshape.nii.gz \
+    -interpolation 0  \
+    -mode 2 &
 
 mrview \
-	-load /data/pt_02101_dMRI/software/fsl6/data/standard/MNI152_T1_1mm_brain.nii.gz \
-	-interpolation 0 \
-	-mode 2 &
+    -load /data/pt_02101_dMRI/software/fsl6/data/standard/MNI152_T1_1mm_brain.nii.gz \
+    -interpolation 0 \
+    -mode 2 &
 
 
 echo $0 " Done" 

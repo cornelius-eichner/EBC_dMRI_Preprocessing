@@ -112,7 +112,9 @@ FLASH_DIR_WARP="${FLASH_DIR}/Reg_to_EPI/"
 # Set Scripts and Software Folders
 SCRIPTS=${LOCAL_DIR}/scripts/
 SOFTWARE=/data/pt_02101_dMRI/software/
-FSL_LOCAL=/data/pt_02101_dMRI/software/fsl6/bin/
+FSL_LOCAL=${SOFTWARE}/fsl6/bin/
+MRDEGIBBS3D=${SOFTWARE}/mrtrix3/mrdegibbs3D/bin/deGibbs3D
+
 CONFIG_DIR=${LOCAL_DIR}/config/
 EDDY_PATH=/data/pt_02101_dMRI/software/eddy/eddy_cuda8.0
 

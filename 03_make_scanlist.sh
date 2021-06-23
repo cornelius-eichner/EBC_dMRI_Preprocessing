@@ -8,10 +8,10 @@ source ./SET_VARIABLES.sh
 
 # Loop over directories in Bruker raw folder
 for Scan in ${BRUKER_RAW_DIR}/*/; do
-	if test -f "${Scan}/acqp"; then
-	    echo "Scanning File $Scan";
-	    python3 ${SCRIPTS}/print_scan_name.py "${Scan}/acqp" >> SCANLIST.txt
-	fi
+    if test -f "${Scan}/acqp"; then
+        echo "Scanning File $Scan";
+        python3 ${SCRIPTS}/print_scan_name.py "${Scan}/acqp" >> SCANLIST.txt
+    fi
 done
 
 mv SCANLIST.txt ${CONFIG_DIR}/SCANLIST_unsorted.txt
