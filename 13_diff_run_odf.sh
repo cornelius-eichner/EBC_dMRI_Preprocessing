@@ -95,30 +95,30 @@ done
 
 
 
-# Picks the ratio with lowest AIC for each voxel
+# Picks the ratio with lowest AIC for each voxel in neighborhood
 python3 ${SCRIPTS}/combine_aic_neigh.py \
         --iaic ${AICFILELIST[@]} \
         --iodf ${ODFFILELIST[@]} \
         --mask ${DIFF_DATA_DIR}/mask.nii.gz \
         --ratios ${RATIOS[@]} \
-        --oodf ${ODF_DIR}/best_neighborhood_aic_odf.nii.gz \
-        --oaic ${ODF_DIR}/aic_ratios/best_neighborhood_aic_aic.nii.gz \
-        --oratio ${ODF_DIR}/best_neighborhood_aic_ratio.nii.gz
+        --oodf ${ODF_DIR}/odf_best_neighborhood_aic.nii.gz \
+        --oaic ${ODF_DIR}/aic_neighborhood_aic.nii.gz \
+        --oratio ${ODF_DIR}/ratio_best_neighborhood_aic.nii.gz
 
 
 echo 'Extracting peaks from best AIC ODFs'
 python3 ${SCRIPTS}/peak_extraction.py \
-        ${ODF_DIR}/best_neighborhood_aic_odf.nii.gz \
-        ${ODF_DIR}/nufo_best_aic.nii.gz \
-        ${ODF_DIR}/dir_best_aic.nii.gz \
-        ${ODF_DIR}/len_best_aic.nii.gz \
+        ${ODF_DIR}/odf_best_neighborhood_aic.nii.gz \
+        ${ODF_DIR}/nufo_best_neighborhood_aic.nii.gz \
+        ${ODF_DIR}/dir_best_neighborhood_aic.nii.gz \
+        ${ODF_DIR}/len_best_neighborhood_aic.nii.gz \
         --relth 0.25 --minsep 25 --maxn 10 \
         --mask ${DIFF_DATA_DIR}/mask.nii.gz
 
 
 echo 'Normalize ODF'
 python3 ${SCRIPTS}/sh_odf_normalize.py \
-        ${ODF_DIR}/best_neighborhood_aic_odf.nii.gz \
-        ${ODF_DIR}/odf_best_aic_normalized.nii.gz
+        ${ODF_DIR}/odf_best_neighborhood_aic.nii.gz \
+        ${ODF_DIR}/odf_best_neighborhood_aic_normalized.nii.gz
 
 
