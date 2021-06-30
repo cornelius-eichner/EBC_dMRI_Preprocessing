@@ -7,3 +7,11 @@ nifti_raw/
 temp_corr_index.txt
 SCANLIST.txt
 config/SCANLIST_unsorted.txt
+
+# Ignoge python cache patterns
+**/*.pyc
+**/__pycache__/
+
+# Ignore System Files from Mac and Windows
+**/.DS_Store
+**/Thumbs.db
