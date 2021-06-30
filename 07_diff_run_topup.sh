@@ -61,7 +61,7 @@ ${FSL_LOCAL}/fslmerge -t \
 
 
 echo "Runing Multiple N4 on dMRI b0 Data"
-for i in {1..3} 
+for i in $(seq 1 $N4_ITER)
 do 
         CURRENT_ITER_B0=${TOPUP_DIR}/data_N4_${i}x.nii.gz
 

@@ -28,7 +28,7 @@ cp ${DIFF_DATA_NORM_RELEASE_DIR}/data_norm_mean.nii.gz ${TISSUE_SEGMENTATION_DIR
 cp ${DIFF_DATA_RELEASE_DIR}/mask.nii.gz ${TISSUE_SEGMENTATION_DIR}/mask.nii.gz
 
 echo "Runing 5 x N4 on dMRI b0 Data"
-for i in {1..5} 
+for i in $(seq 1 $N4_ITER)
 do 
         current_iter_b0=${TISSUE_SEGMENTATION_DIR}/data_b0_N4_${i}x.nii.gz
 
@@ -49,7 +49,7 @@ done
 
 
 echo 'Runing 5x N4 on FLASH Data'
-for i in {1..5} 
+for i in $(seq 1 $N4_ITER)
 do 
 
         current_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1_N4_${i}x.nii.gz

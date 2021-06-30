@@ -61,7 +61,7 @@ mrview  -mode 2 \
 # Unringing
 echo 'Gibbs Ringing Correction'
 
-${MRDEGIBBS3D} \
+${MRDEGIBBS3D} -force \
     ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
     ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
 

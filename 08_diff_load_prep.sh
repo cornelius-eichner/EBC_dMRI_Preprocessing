@@ -124,7 +124,7 @@ mrview \
 
 # Multiple rounds of N4 before mask generation
 echo 'Runing Repeated N4 on EPI b0 Data'
-for i in {1..4} 
+for i in $(seq 1 $N4_ITER)
 do 
 
         current_iter_epi=${DIFF_DATA_DIR}/data_b0s_mc_mean_median_N4_${i}x.nii.gz

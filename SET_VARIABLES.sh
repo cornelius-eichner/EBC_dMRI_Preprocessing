@@ -74,6 +74,10 @@ LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # Check the number of available cores for parallel processing
 N_CORES=48
 
+
+# How often should N4 homogenize the data
+declare -i N4_ITER=5
+
 ########################
 # Local Folders for Processing
 # Diffusion Data Folder Variables
