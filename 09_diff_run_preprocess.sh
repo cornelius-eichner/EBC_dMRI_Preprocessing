@@ -61,10 +61,9 @@ mrview  -mode 2 \
 # Unringing
 echo 'Gibbs Ringing Correction'
 
-${SCRIPTS}/deGibbs3D_timeseries.sh \
+${MRDEGIBBS3D} \
     ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
     ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
-    $( readlink -f SET_VARIABLES.sh )
 
 ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
     -sub ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
