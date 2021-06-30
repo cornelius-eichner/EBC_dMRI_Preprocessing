@@ -7,7 +7,7 @@ cp ${FLASH_DIR_FA05}/data.nii.gz ${FLASH_DIR_WARP}/data_flash.nii.gz
 
 
 echo 'Runing N4 on FLASH Data'
-for i in {1..5} 
+for i in $(seq 1 $N4_ITER);
 do 
 
         current_iter_flash=${FLASH_DIR_WARP}/data_flash_N4_${i}x.nii.gz
@@ -124,7 +124,7 @@ ${FSL_LOCAL}/fslmaths \
 
 # Multiple rounds of N4
 echo 'Runing N4 on EPI Data'
-for i in {1..5} 
+for i in $(seq 1 $N4_ITER)
 do 
 
         current_iter_epi=${FLASH_DIR_WARP}/data_epi_N4_${i}x.nii.gz
