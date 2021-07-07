@@ -85,7 +85,7 @@ def main():
     	print('Saving Data in Radiological Convention')
 
     	aff_cust[0,0] *= -1 # Flipping the x axis
-    	aff_cust[0, 3] = -(data_swap.shape[0]-1)*RES # Adjust for data zero point being flipped
+    	aff_cust[0, 3] = (data_swap.shape[0]-1)*RES # Adjust for data zero point being flipped
 
 
     elif ORIENTATION == 'neu':
