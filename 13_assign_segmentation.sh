@@ -8,30 +8,24 @@ source ./SET_VARIABLES.sh
 mrview ${TISSUE_SEGMENTATION_DIR}/*fuzzy*.nii.gz
 
 # Average input classes for WM Mask
-INPUT_CLASSES_WM_MASK=\
-${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_4class_idx_1.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_3class_idx_0.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_4class_idx_1.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_3class_idx_2.nii.gz '\
+# e.g., 
+# INPUT_CLASSES_WM_MASK=\
+# ${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_4class_idx_1.nii.gz '\
+# ${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_3class_idx_0.nii.gz '\
+# ${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_4class_idx_1.nii.gz '\
+# ${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_3class_idx_2.nii.gz '\
+
+INPUT_CLASSES_WM_MASK=''
 
 mrview $INPUT_CLASSES_WM_MASK
 
 # Average input classes for GM Mask
-INPUT_CLASSES_GM_MASK=\
-${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_4class_idx_2.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_3class_idx_1.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_4class_idx_3.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_3class_idx_1.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_2class_idx_1.nii.gz '\
+INPUT_CLASSES_GM_MASK=''
 
 mrview $INPUT_CLASSES_GM_MASK
 
 
-INPUT_CLASSES_NO_BRAIN=\
-${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_4class_idx_3.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'noFA_fuzzy_label_3class_idx_2.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_4class_idx_2.nii.gz '\
-${TISSUE_SEGMENTATION_DIR}/'fuzzy_label_3class_idx_0.nii.gz '\
+INPUT_CLASSES_NO_BRAIN=''
 
 mrview $INPUT_CLASSES_NO_BRAIN
 
