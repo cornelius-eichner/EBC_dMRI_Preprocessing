@@ -3,48 +3,48 @@
 # This file needs to be copied in the preprocessing folder of each respective subject. Potential changes in processing should be made in this folder.
 
 # Folder of Bruker Data in Bruker Format
-BRUKER_RAW_DIR=
+BRUKER_RAW_DIR=/data/pt_02101_dMRI/data/007_C_C_NEGRA/raw/20210203_160848_007_C_C_NEGRA_ID11357_1_1_rr/20210203_160848_007_C_C_NEGRA_ID11357_1_1/
 
 #########################################
 # Select Scans for Processing
 
 # Reorientation Check
-CHECK_REORIENT_SCAN=
+CHECK_REORIENT_SCAN=13
 
 # Noisemap
-NOISE_SCAN=
+NOISE_SCAN=15
 
 # Topup
-TOPUP_LR_RUN=
-TOPUP_RL_RUN=
+TOPUP_LR_RUN=13
+TOPUP_RL_RUN=14
 
 
 # Diffusion Data
-DIFF_SCANS=()
-DATA_RESCALING=   
+DIFF_SCANS=(13 17 18 19 20 21 22 23 24)
+DATA_RESCALING=0.002300  
 MASK_THRESHOLD=0.1
-HEAT_CORRECTION= #YES/NO
+HEAT_CORRECTION=NO #YES/NO
 
 
 # FLASH Scans
-FLASH_FA_05=
-FLASH_FA_12p5=
-FLASH_FA_25=
-FLASH_FA_50=
-FLASH_FA_80=
-FLASH_HIGHRES=
-FLASH_ULTRA_HIGHRES=
+FLASH_FA_05=26
+FLASH_FA_12p5=27
+FLASH_FA_25=28
+FLASH_FA_50=29
+FLASH_FA_80=30
+FLASH_HIGHRES=31
+FLASH_ULTRA_HIGHRES=32
 
 ####################################
 
 # Flag including an additional one-step nonlinear registration to correct for slight distortions between FLASH and EPI scans
 # This issue was mitigated by a recent Bruker Patch
-FLAG_FLASH_CORR= #YES/NO
+FLAG_FLASH_CORR=YES #YES/NO
 
 
 # Use nonlinear registration to correct for non EPI traj adjusted reversed PE scans
-FLAG_TOPUP_RETRO_RECON= #YES/NO
-RETRO_RECON_NUMBER=
+FLAG_TOPUP_RETRO_RECON=YES #YES/NO
+RETRO_RECON_NUMBER=4
 
 ######
 # BASIC PARAMETERS, TYPICALLY SHOULD NOT CHANGE
