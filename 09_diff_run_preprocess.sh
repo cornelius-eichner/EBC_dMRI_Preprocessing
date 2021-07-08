@@ -244,6 +244,8 @@ ${FSL_LOCAL}/fslmerge \
     ${DIFF_DATA_DIR}/data_debias_denoise_degibbs_driftcorr_detrend_eddy.nii.gz \
     ${SPLIT_WARPED_DIR}/*nii.gz
 
+cp ${EDDY_DIR}/*bvecs ${DIFF_DATA_DIR}/data.bvec_eddy
+
 #
 ##################
 
@@ -255,13 +257,13 @@ echo 'DTI Fit for Quality Control'
 
 ${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_degibbs_driftcorr_detrend_eddy.nii.gz \
                     -m ${DIFF_DATA_DIR}/mask.nii.gz \
-                    -r ${DIFF_DATA_DIR}/data.bvec \
+                    -r ${DIFF_DATA_DIR}/data.bvec_eddy \
                     -b ${DIFF_DATA_DIR}/data.bval \
                     -o ${DTI_DIR}/dti \
                     -w -V --save_tensor 
 
 # Create a scaled FA image for improved visualization contrast
-fsleyes ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_V1* 
+fsleyes ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_V1* &
 
 #
 ##################

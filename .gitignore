@@ -8,6 +8,9 @@ temp_corr_index.txt
 SCANLIST.txt
 config/SCANLIST_unsorted.txt
 
+# Ignore hidden files
+.*
+
 # Ignoge python cache patterns
 **/*.pyc
 **/__pycache__/
