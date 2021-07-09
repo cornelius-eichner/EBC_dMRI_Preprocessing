@@ -12,10 +12,31 @@ cp ${FLASH_DIR_FA25}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr3.nii.
 cp ${FLASH_DIR_FA50}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr4.nii.gz
 cp ${FLASH_DIR_FA80}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr5.nii.gz
 
+${MRDEGIBBS3D} -force \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr1.nii.gz \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr1_degibbs.nii.gz 
+
+${MRDEGIBBS3D} -force \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr2.nii.gz \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr2_degibbs.nii.gz 
+
+${MRDEGIBBS3D} -force \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr3.nii.gz \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr3_degibbs.nii.gz 
+
+${MRDEGIBBS3D} -force \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr4.nii.gz \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr4_degibbs.nii.gz 
+
+${MRDEGIBBS3D} -force \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr5.nii.gz \
+    ${TISSUE_SEGMENTATION_DIR}/flash_contr5_degibbs.nii.gz 
+
 
 # Copy DTI Data to segmentation directory
 cp ${DTI_DIR}/dti_FA.nii.gz ${TISSUE_SEGMENTATION_DIR}/dti_FA.nii.gz
 cp ${DTI_DIR}/dti_MD.nii.gz ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz
+cp ${DTI_DIR}/dti_RD.nii.gz ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz
 
 # Copy b0 data from dti fit to segmentation directory
 cp ${DTI_DIR}/dti_S0.nii.gz ${TISSUE_SEGMENTATION_DIR}/data_b0.nii.gz
@@ -52,25 +73,25 @@ echo 'Runing 5x N4 on FLASH Data'
 for i in $(seq 1 $N4_ITER)
 do 
 
-        current_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1_N4_${i}x.nii.gz
-        current_iter_flash_2=${TISSUE_SEGMENTATION_DIR}/flash_contr2_N4_${i}x.nii.gz
-        current_iter_flash_3=${TISSUE_SEGMENTATION_DIR}/flash_contr3_N4_${i}x.nii.gz
-        current_iter_flash_4=${TISSUE_SEGMENTATION_DIR}/flash_contr4_N4_${i}x.nii.gz
-        current_iter_flash_5=${TISSUE_SEGMENTATION_DIR}/flash_contr5_N4_${i}x.nii.gz
+        current_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1_degibbs_N4_${i}x.nii.gz
+        current_iter_flash_2=${TISSUE_SEGMENTATION_DIR}/flash_contr2_degibbs_N4_${i}x.nii.gz
+        current_iter_flash_3=${TISSUE_SEGMENTATION_DIR}/flash_contr3_degibbs_N4_${i}x.nii.gz
+        current_iter_flash_4=${TISSUE_SEGMENTATION_DIR}/flash_contr4_degibbs_N4_${i}x.nii.gz
+        current_iter_flash_5=${TISSUE_SEGMENTATION_DIR}/flash_contr5_degibbs_N4_${i}x.nii.gz
 
         if [ $i == 1 ]
         then 
-                previous_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1.nii.gz
-                previous_iter_flash_2=${TISSUE_SEGMENTATION_DIR}/flash_contr2.nii.gz
-                previous_iter_flash_3=${TISSUE_SEGMENTATION_DIR}/flash_contr3.nii.gz
-                previous_iter_flash_4=${TISSUE_SEGMENTATION_DIR}/flash_contr4.nii.gz
-                previous_iter_flash_5=${TISSUE_SEGMENTATION_DIR}/flash_contr5.nii.gz
+                previous_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1_degibbs.nii.gz
+                previous_iter_flash_2=${TISSUE_SEGMENTATION_DIR}/flash_contr2_degibbs.nii.gz
+                previous_iter_flash_3=${TISSUE_SEGMENTATION_DIR}/flash_contr3_degibbs.nii.gz
+                previous_iter_flash_4=${TISSUE_SEGMENTATION_DIR}/flash_contr4_degibbs.nii.gz
+                previous_iter_flash_5=${TISSUE_SEGMENTATION_DIR}/flash_contr5_degibbs.nii.gz
         else
-                previous_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1_N4_$( expr $i - 1 )x.nii.gz
-                previous_iter_flash_2=${TISSUE_SEGMENTATION_DIR}/flash_contr2_N4_$( expr $i - 1 )x.nii.gz
-                previous_iter_flash_3=${TISSUE_SEGMENTATION_DIR}/flash_contr3_N4_$( expr $i - 1 )x.nii.gz
-                previous_iter_flash_4=${TISSUE_SEGMENTATION_DIR}/flash_contr4_N4_$( expr $i - 1 )x.nii.gz
-                previous_iter_flash_5=${TISSUE_SEGMENTATION_DIR}/flash_contr5_N4_$( expr $i - 1 )x.nii.gz
+                previous_iter_flash_1=${TISSUE_SEGMENTATION_DIR}/flash_contr1_degibbs_N4_$( expr $i - 1 )x.nii.gz
+                previous_iter_flash_2=${TISSUE_SEGMENTATION_DIR}/flash_contr2_degibbs_N4_$( expr $i - 1 )x.nii.gz
+                previous_iter_flash_3=${TISSUE_SEGMENTATION_DIR}/flash_contr3_degibbs_N4_$( expr $i - 1 )x.nii.gz
+                previous_iter_flash_4=${TISSUE_SEGMENTATION_DIR}/flash_contr4_degibbs_N4_$( expr $i - 1 )x.nii.gz
+                previous_iter_flash_5=${TISSUE_SEGMENTATION_DIR}/flash_contr5_degibbs_N4_$( expr $i - 1 )x.nii.gz
         fi
 
         echo 'N4 FLASH Contrast 1: Run '${i}
@@ -158,6 +179,7 @@ echo 'Run fuzzy 2-class segmentation without FA'
 python3 ${SCRIPTS}/fuzzyseg.py \
     --data  ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
             $current_iter_b0 \
+            ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/data_norm_mean.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr2_warp.nii.gz \
@@ -172,6 +194,7 @@ python3 ${SCRIPTS}/fuzzyseg.py \
 echo 'Run fuzzy 3-class segmentation without FA'
 python3 ${SCRIPTS}/fuzzyseg.py \
     --data  ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+            ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz \
             $current_iter_b0 \
             ${TISSUE_SEGMENTATION_DIR}/data_norm_mean.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
@@ -187,6 +210,7 @@ python3 ${SCRIPTS}/fuzzyseg.py \
 echo 'Run fuzzy 4-class segmentation without FA'
 python3 ${SCRIPTS}/fuzzyseg.py \
     --data  ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
+            ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz \
             $current_iter_b0 \
             ${TISSUE_SEGMENTATION_DIR}/data_norm_mean.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
@@ -205,6 +229,7 @@ echo 'Run fuzzy 2-class segmentation with FA'
 python3 ${SCRIPTS}/fuzzyseg.py \
     --data  ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/dti_FA.nii.gz \
+            ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz \
             $current_iter_b0 \
             ${TISSUE_SEGMENTATION_DIR}/data_norm_mean.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
@@ -221,6 +246,7 @@ echo 'Run fuzzy 3-class segmentation with FA'
 python3 ${SCRIPTS}/fuzzyseg.py \
     --data  ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/dti_FA.nii.gz \
+            ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz \
             $current_iter_b0 \
             ${TISSUE_SEGMENTATION_DIR}/data_norm_mean.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
@@ -237,6 +263,7 @@ echo 'Run fuzzy 4-class segmentation with FA'
 python3 ${SCRIPTS}/fuzzyseg.py \
     --data  ${TISSUE_SEGMENTATION_DIR}/dti_MD.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/dti_FA.nii.gz \
+            ${TISSUE_SEGMENTATION_DIR}/dti_RD.nii.gz \
             $current_iter_b0 \
             ${TISSUE_SEGMENTATION_DIR}/data_norm_mean.nii.gz \
             ${TISSUE_SEGMENTATION_DIR}/flash_contr1_warp.nii.gz \
