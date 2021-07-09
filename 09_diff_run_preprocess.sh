@@ -63,7 +63,7 @@ echo 'Gibbs Ringing Correction'
 
 ${MRDEGIBBS3D} -force \
     ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
-    ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
+    ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz 
 
 ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
     -sub ${DIFF_DATA_DIR}/data_debias_denoise.nii.gz \
@@ -264,6 +264,9 @@ ${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_degibbs_driftcorr_de
 
 # Create a scaled FA image for improved visualization contrast
 fsleyes ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_V1* &
+
+# Calculate Radial Diffusivity
+fslmaths {DTI_DIR}/dti_L2* -add {DTI_DIR}/dti_L3* -div 2 {DTI_DIR}/dti_RD.nii.gz 
 
 #
 ##################
