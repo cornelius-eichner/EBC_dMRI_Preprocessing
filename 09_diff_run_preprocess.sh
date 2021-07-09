@@ -266,7 +266,7 @@ ${FSL_LOCAL}/dtifit -k ${DIFF_DATA_DIR}/data_debias_denoise_degibbs_driftcorr_de
 fsleyes ${DTI_DIR}/dti_MD* ${DTI_DIR}/dti_FA* ${DTI_DIR}/dti_V1* &
 
 # Calculate Radial Diffusivity
-fslmaths {DTI_DIR}/dti_L2* -add {DTI_DIR}/dti_L3* -div 2 {DTI_DIR}/dti_RD.nii.gz 
+fslmaths ${DTI_DIR}/dti_L2* -add ${DTI_DIR}/dti_L3* -div 2 ${DTI_DIR}/dti_RD.nii.gz 
 
 #
 ##################
