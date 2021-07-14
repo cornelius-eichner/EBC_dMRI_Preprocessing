@@ -89,6 +89,32 @@ mv -f ${FLASH_DIR_HIGHRES}/data_reshape.nii.gz ${FLASH_DIR_HIGHRES}/data.nii.gz
 mv -f ${FLASH_DIR_ULTRA_HIGHRES}/data_reshape.nii.gz ${FLASH_DIR_ULTRA_HIGHRES}/data.nii.gz
 
 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_FA05}/data.nii.gz \
+    ${FLASH_DIR_FA05}/data_degibbs.nii.gz 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_FA12p5}/data.nii.gz \
+    ${FLASH_DIR_FA12p5}/data_degibbs.nii.gz 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_FA25}/data.nii.gz \
+    ${FLASH_DIR_FA25}/data_degibbs.nii.gz 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_FA50}/data.nii.gz \
+    ${FLASH_DIR_FA50}/data_degibbs.nii.gz 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_FA80}/data.nii.gz \
+    ${FLASH_DIR_FA80}/data_degibbs.nii.gz 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_HIGHRES}/data.nii.gz \
+    ${FLASH_DIR_HIGHRES}/data_degibbs.nii.gz 
+${MRDEGIBBS3D} -force \
+    ${FLASH_DIR_ULTRA_HIGHRES}/data.nii.gz \
+    ${FLASH_DIR_ULTRA_HIGHRES}/data_degibbs.nii.gz 
+
+
+
+
+
 # Show reoriented data alongside with MNI brain
 mrview \
     -load ${FLASH_DIR_FA25}/data.nii.gz \
