@@ -8,10 +8,25 @@ import os
 from scipy import interp
 
 
-DESCRIPTION =   'Drift Correction of dMRI Data, Based on Linear Interpolation Between b0s. Cornelius Eichner 2021'
+DESCRIPTION = """
+Drift Correction of dMRI Data, Based on Linear Interpolation Between b0s
+"""
+
+
+EPILOG = """
+Created by Cornelius Eichner, MPI CBS, 2021.
+Updated with timestamps by Michael Paquette, MPI CBS, 2021.
+"""
+
+
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter):
+    pass
+
 
 def buildArgsParser():
-    p = argparse.ArgumentParser(description=DESCRIPTION)
+    p = argparse.ArgumentParser(description=DESCRIPTION,
+                                epilog=EPILOG,
+                                formatter_class=CustomFormatter)
     p.add_argument('--in', dest='input', action='store', type=str,
                             help='Input Data Path')
     
@@ -20,6 +35,9 @@ def buildArgsParser():
 
     p.add_argument('--bval', dest='bval', action='store', type=str,
                             help='BVALS Path')
+
+    p.add_argument('--time', dest='timestamp', action='store', type=str,
+                            help='Timestamps Path')
 
     p.add_argument('--out', dest='out', action='store', type=str,
                             help='Output Path')
@@ -35,8 +53,9 @@ def main():
 
     # Load input variables
     PATH_IN     = os.path.realpath(args.input)
-    PATH_MASK     = os.path.realpath(args.mask)
-    PATH_BVAL    = os.path.realpath(args.bval)
+    PATH_MASK   = os.path.realpath(args.mask)
+    PATH_BVAL   = os.path.realpath(args.bval)
+    PATH_TIME   = os.path.realpath(args.timestamp)
     PATH_OUT    = os.path.realpath(args.out) 
 
     # Load Data
@@ -49,21 +68,27 @@ def main():
 
     bvals = np.round(np.genfromtxt(PATH_BVAL), -3).squeeze()
 
+    timestamps = np.genfromtxt(PATH_TIME, fmt='%d')
+
 
     print('Running Drift Correction')
 
     b0_mask = bvals == 0
     b0_idx = np.where(bvals == 0)[0]
 
+    # timestamps of b0s
+    x_ = timestamps[b0_idx]
+    A_ = np.vstack([x_, np.ones(len(x_))]).T
+
     # Calculate B0 mean 
-    data_mean = data[mask,:].mean(axis = 0)
-    b0_mean = data_mean[b0_mask].mean()
+    data_mean = data[mask].mean(axis=0)
 
-    # Interpolate between b0 images
-    data_idx = np.linspace(0, data_mean.shape[0]-1, data_mean.shape[0], dtype = np.int) 
-    b0_interp = interp(x = data_idx, xp = b0_idx, fp = data_mean[b0_idx])
+    # fit slope m_ and y-intercept c_
+    m_, c_ = np.linalg.lstsq(A_, data_mean[b0_idx], rcond=None)[0]
 
-    data_drift_corr = b0_mean * ( data[..., :] / b0_interp )
+    # correction = (m*x_prime + c) / (m*0 + c) = (m*x_prime / c) + 1
+    drift_scaling = ((timestamps*m_) / c_) + 1
+    data_drift_corr = data[..., :] / drift_scaling
 
 
     # Save Data
