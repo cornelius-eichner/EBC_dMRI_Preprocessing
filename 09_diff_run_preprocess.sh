@@ -87,6 +87,7 @@ python3 ${SCRIPTS}/drift_corr_data.py \
     --in ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
     --mask ${DIFF_DATA_DIR}/mask.nii.gz \
     --bval ${DIFF_DATA_DIR}/data.bval \
+    --time ${DIFF_DATA_DIR}/data_timestamps.txt \
     --out ${DIFF_DATA_DIR}/data_debias_denoise_degibbs_driftcorr.nii.gz \
 
 
