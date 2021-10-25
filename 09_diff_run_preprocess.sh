@@ -75,6 +75,14 @@ ${FSL_LOCAL}/fslmaths ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
 # Detrending the tissue heating effect of increased diffusivity
 echo 'Signal Detrending'
 
+# Concatenate path of all method file in order 
+METHODPATH=''
+for SCANNUM in ${DIFF_SCANS[@]}; do
+  METHODPATH+=${BRUKER_RAW_DIR}'/'$SCANNUM'/method '
+done
+
+python3 ${SCRIPTS}/get_timestamp.py $METHODPATH ${DIFF_DATA_DIR}'/data_timestamps.txt'
+
 python3 ${SCRIPTS}/drift_corr_data.py \
     --in ${DIFF_DATA_DIR}/data_debias_denoise_degibbs.nii.gz \
     --mask ${DIFF_DATA_DIR}/mask.nii.gz \
