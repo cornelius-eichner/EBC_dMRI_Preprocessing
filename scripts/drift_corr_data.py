@@ -66,7 +66,7 @@ def main():
 
     mask = nib.load(PATH_MASK).get_fdata().astype(np.bool)
 
-    bvals = np.round(np.genfromtxt(PATH_BVAL), -3).squeeze()
+    bvals = np.genfromtxt(PATH_BVAL)
 
     timestamps = np.genfromtxt(PATH_TIME, dtype=np.int)
 
@@ -74,7 +74,7 @@ def main():
     print('Running Drift Correction')
 
     b0_mask = bvals == 0
-    b0_idx = np.where(bvals == 0)[0]
+    b0_idx = np.where(bvals < 0.01)[0]
 
     # print('b0 index: {}'.format(b0_idx))
 
