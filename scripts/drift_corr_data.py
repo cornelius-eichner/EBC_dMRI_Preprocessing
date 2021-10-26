@@ -68,13 +68,15 @@ def main():
 
     bvals = np.round(np.genfromtxt(PATH_BVAL), -3).squeeze()
 
-    timestamps = np.genfromtxt(PATH_TIME, fmt='%d')
+    timestamps = np.genfromtxt(PATH_TIME, dtype=np.int)
 
 
     print('Running Drift Correction')
 
     b0_mask = bvals == 0
     b0_idx = np.where(bvals == 0)[0]
+
+    # print('b0 index: {}'.format(b0_idx))
 
     # timestamps of b0s
     x_ = timestamps[b0_idx]
@@ -89,6 +91,19 @@ def main():
     # correction = (m*x_prime + c) / (m*0 + c) = (m*x_prime / c) + 1
     drift_scaling = ((timestamps*m_) / c_) + 1
     data_drift_corr = data[..., :] / drift_scaling
+
+    # import pylab as pl 
+    # pl.figure()
+    # pl.subplot(1,2,1)
+    # pl.plot(timestamps, m_*timestamps + c_)
+    # pl.scatter(x_, data_mean[b0_idx])
+    # pl.title('Fit on B0s')
+    # pl.subplot(1,2,2)
+    # pl.semilogy(timestamps, data_mean, label='before', alpha=0.5)
+    # pl.semilogy(timestamps, data_drift_corr[mask].mean(axis=0), label='after', alpha=0.5)
+    # pl.legend()
+    # pl.title('Drift correction on data')
+    # pl.show()
 
 
     # Save Data

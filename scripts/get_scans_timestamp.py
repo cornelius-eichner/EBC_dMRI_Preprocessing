@@ -127,23 +127,24 @@ def main():
     n_partitions = []
 
     for fname in args.method:
+        print(' ')
         print(fname)
         rawmethod = rawtext(fname)
 
         # detect method name
         # only support <Bruker:DtiEpi> and <User:mcw_DWEpiWavev7>
         method_name = parse_tag(grab_tag(rawmethod, 'Method'))
-        # print('Types of method: {}'.format(method_name))
+        print('Type of method: {}'.format(method_name))
 
         if (method_name == 'Bruker:DtiEpi') or (method_name == 'User:mcw_DWEpiWavev7'):
             # locate ##OWNER tag to find end of scan timestamp
             end_timestamp_line_index = np.argwhere([l[:7]=='##OWNER' for l in rawmethod])[0][0] + 1
             date_time_str = ' '.join(rawmethod[end_timestamp_line_index].split(' ')[1:3]) # strip non date part
             date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S.%f') # parse date with 4 digit year and miliseconds
-            # print(date_time_obj)
             end_timestamp.append(date_time_obj)
         else:
             return None
+        print('End of scan ', date_time_obj)
 
 
 
@@ -174,10 +175,10 @@ def main():
                 duration[timetag[tmp2]] = tmp1
 
             delta_time_obj = timedelta(**duration)
-            # print(delta_time_obj)
             durations.append(delta_time_obj)
         else:
             return None
+        print('scan duration ', delta_time_obj)
 
 
 
@@ -196,24 +197,35 @@ def main():
             # to estimate de total number of volume,
             # we multiply echos, repetitions, bvalue, bshape and bvecs
             # we can ignore average since they are internally averaged
-            NEcho = parse_tag(grab_tag(rawmethod, 'PVM_NEchoImages'))[0]
-            NRep = parse_tag(grab_tag(rawmethod, 'PVM_NRepetitions'))[0]
-            Nbvec = parse_tag(grab_tag(rawmethod, 'DwNDirs'))[0]
-            Nbval = parse_tag(grab_tag(rawmethod, 'DwNAmplitudes'))[0]
+            NEcho = int(parse_tag(grab_tag(rawmethod, 'PVM_NEchoImages'))[0])
+            NRep = int(parse_tag(grab_tag(rawmethod, 'PVM_NRepetitions'))[0])
+            Nbvec = int(parse_tag(grab_tag(rawmethod, 'DwNDirs'))[0])
+            Nbval = int(parse_tag(grab_tag(rawmethod, 'DwNAmplitudes'))[0])
             # this is most likely wrong, I don't know how multiple waveform shape are stored in the method
             Nbshape = len(parse_tag(grab_tag(rawmethod, 'DwDynGradShapeEnum1')).split(' '))
 
-            Nvol = int(NEcho * NRep * Nbvec * Nbval * Nbshape)
+            Nvol = NEcho * NRep * Nbvec * Nbval * Nbshape
+
+            print('{} echos'.format(NEcho))
+            print('{} Repetitions'.format(NRep))
+            print('{} bvecs'.format(Nbvec))
+            print('{} bvals'.format(Nbval))
+            print('{} btensor shapes'.format(Nbshape))
+            print('{} Total volumes'.format(Nvol))
 
         elif (method_name == 'Bruker:DtiEpi'):
-            NEcho = parse_tag(grab_tag(rawmethod, 'PVM_NEchoImages'))[0]
-            NRep = parse_tag(grab_tag(rawmethod, 'PVM_NRepetitions'))[0]
-            NDwi = parse_tag(grab_tag(rawmethod, 'PVM_DwNDiffDir'))[0]
+            NEcho = int(parse_tag(grab_tag(rawmethod, 'PVM_NEchoImages'))[0])
+            NRep = int(parse_tag(grab_tag(rawmethod, 'PVM_NRepetitions'))[0])
+            NDwi = int(parse_tag(grab_tag(rawmethod, 'PVM_DwNDiffDir'))[0])
 
-            Nvol = int(NEcho * NRep * NDwi)
+            Nvol = NEcho * NRep * NDwi
+
+            print('{} echos'.format(NEcho))
+            print('{} Repetitions'.format(NRep))
+            print('{} DWIs'.format(NDwi))
+            print('{} Total volumes'.format(Nvol))
 
 
-        # print(Nvol)
         n_partitions.append(Nvol)
 
 

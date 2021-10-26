@@ -78,7 +78,7 @@ echo 'Signal Detrending'
 # Concatenate path of all method file in order 
 METHODPATH=''
 for SCANNUM in ${DIFF_SCANS[@]}; do
-  METHODPATH+=${BRUKER_RAW_DIR}'/'$SCANNUM'/method '
+  METHODPATH+=${BRUKER_RAW_DIR}$SCANNUM'/method '
 done
 
 python3 ${SCRIPTS}get_scans_timestamp.py $METHODPATH ${DIFF_DATA_DIR}'/data_timestamps.txt'
