@@ -177,5 +177,74 @@ antsRegistration --dimensionality 3 --float 1 \
         -x [$mask_fix,$mask_move] \
         -v 1
 
+
+
+echo 'Register Ultra High Res FLASH and EPI'
+
+echo "Runing Multiple N4 on UltraHighres FLASH Data"
+tmp_N4_ITER=3
+
+for i in $(seq 1 $tmp_N4_ITER)
+do 
+        p_CURRENT_ITER=${FLASH_DIR_ULTRA_HIGHRES}/data_degibbs_N4_${i}x.nii.gz
+
+        if [ $i == 1 ]
+        then 
+                p_PREVIOUS_ITER=${FLASH_DIR_ULTRA_HIGHRES}/data_degibbs.nii.gz
+        else
+                p_PREVIOUS_ITER=${FLASH_DIR_ULTRA_HIGHRES}/data_degibbs_N4_$( expr $i - 1 )x.nii.gz
+        fi
+
+        echo 'N4 b0 dMRI: Run '${i}
+
+        N4BiasFieldCorrection -d 3 \
+                -i ${p_PREVIOUS_ITER} \
+                -o ${p_CURRENT_ITER}
+done
+
+echo 'Removing Zero Values from Unringing'
+fslmaths ${p_CURRENT_ITER} -thr 0 $( remove_ext ${p_CURRENT_ITER} )_thr.nii.gz
+
+
+p_DATA_MOVE=$current_iter_epi
+p_DATA_FIX=$( remove_ext ${p_CURRENT_ITER} )_thr.nii.gz
+
+echo 'Run antsRegistration'
+echo 'Data move: '$p_DATA_MOVE
+echo 'Data fix: '$p_DATA_FIX
+
+antsRegistration --dimensionality 3 --float 1 \
+        --output [${FLASH_DIR_WARP}/epi_to_ultrahighresflash_,${FLASH_DIR_WARP}/data_epi_warped_to_uhrflash.nii.gz] \
+        --interpolation Linear \
+        --winsorize-image-intensities [0.005,0.995] \
+        --use-histogram-matching 0 \
+        --transform Rigid[0.1] \
+        --metric MI[$p_DATA_FIX,$p_DATA_MOVE,1,32,Regular,0.25] \
+        --convergence [1000x500x250x100,1e-6,10] \
+        --shrink-factors 8x4x2x1 \
+        --smoothing-sigmas 3x2x1x0 \
+        --transform Affine[0.1] \
+        --metric MI[$p_DATA_FIX,$p_DATA_MOVE,1,32,Regular,0.25] \
+        --convergence [1000x500x250x100,1e-6,10] \
+        --shrink-factors 8x4x2x1 \
+        --smoothing-sigmas 3x2x1x0 \
+        --transform SyN[0.1,3,0] \
+        --metric CC[$p_DATA_FIX,$p_DATA_MOVE,1,4] \
+        --convergence [400x200x100x50x50,1e-6,10] \
+        --shrink-factors 16x8x4x2x1 \
+        --smoothing-sigmas 4x3x2x1x0 \
+        -v 1
+
+echo 'Apply Warp'
+antsApplyTransforms --dimensionality 3 --float 1 \
+        --input $p_DATA_FIX \
+        --reference-image $p_DATA_FIX \
+        --interpolation BSpline \
+        --transform ${FLASH_DIR_WARP}/epi_to_ultrahighresflash_1Inverse*nii.gz \
+        --transform [${FLASH_DIR_WARP}/epi_to_ultrahighresflash_1Inverse_0GenericAffine.mat,1] \
+        --output ${FLASH_DIR_WARP}/flash_ultrahighres_N4_3x_thr_reg.nii.gz \
+        -v 1
+
+
 echo 'Done'
 
