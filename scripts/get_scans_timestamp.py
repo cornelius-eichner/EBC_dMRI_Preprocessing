@@ -152,7 +152,7 @@ def main():
             # locate PVM_ScanTimeStr for scan duration
             delta_time_str = parse_tag(grab_tag(rawmethod, 'PVM_ScanTimeStr'))
             # parse into deltatime
-            tmp_boundary = [s.isdigit() for s in delta_time_str]
+            tmp_boundary = [s.isdigit()|(s=='.') for s in delta_time_str]
             breaks = [0]
             for i in range(len(tmp_boundary)-1):
                 if not tmp_boundary[i] and tmp_boundary[i+1]: # looking for False-True
@@ -161,7 +161,7 @@ def main():
 
             # since the PVM_ScanTimeStr doesnt always have the same element
             # we parse and use **kwargs to create timedelta object
-            timetag = {'d': 'days', 'h': 'hours', 'm': 'minutes', 's': 'seconds', 'ms': 'microseconds'}
+            timetag = {'d': 'days', 'h': 'hours', 'm': 'minutes', 's': 'seconds', 'ms': 'milliseconds'}
             duration = {}
             for i in range(len(breaks)-1):
                 # print(delta_time_str[breaks[i]:breaks[i+1]])
@@ -169,7 +169,7 @@ def main():
                 el_list = delta_time_str[breaks[i]:breaks[i+1]]
                 type_list = tmp_boundary[breaks[i]:breaks[i+1]]
 
-                tmp1 = int(''.join([el_list[j] for j in range(len(el_list)) if type_list[j]]))
+                tmp1 = float(''.join([el_list[j] for j in range(len(el_list)) if type_list[j]]))
                 tmp2 = ''.join([el_list[j] for j in range(len(el_list)) if not type_list[j]])
 
                 duration[timetag[tmp2]] = tmp1
