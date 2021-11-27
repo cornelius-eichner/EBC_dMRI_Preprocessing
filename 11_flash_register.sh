@@ -241,7 +241,7 @@ antsApplyTransforms --dimensionality 3 --float 1 \
         --reference-image $p_DATA_FIX \
         --interpolation BSpline \
         --transform ${FLASH_DIR_WARP}/epi_to_ultrahighresflash_1Inverse*nii.gz \
-        --transform [${FLASH_DIR_WARP}/epi_to_ultrahighresflash_1Inverse_0GenericAffine.mat,1] \
+        --transform [${FLASH_DIR_WARP}/epi_to_ultrahighresflash_0GenericAffine.mat,1] \
         --output ${FLASH_DIR_WARP}/flash_ultrahighres_N4_3x_thr_reg.nii.gz \
         -v 1
 
