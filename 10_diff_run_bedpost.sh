@@ -20,6 +20,8 @@ cp ${EDDY_DIR}/*bvecs                                                           
 #  Run Bedbpost
 echo "Run Bedpost"
 
+fslorient -copysform2qform ${DIFF_DATA_BEDPOSTX_DIR}/data.nii.gz
+
 bedpostx_gpu ${DIFF_DATA_BEDPOSTX_DIR}
 
 ###############
