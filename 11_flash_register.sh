@@ -3,7 +3,7 @@
 # Load Local Variables
 source ./SET_VARIABLES.sh
 
-cp ${FLASH_DIR_FA05}/data.nii.gz ${FLASH_DIR_WARP}/data_flash.nii.gz
+cp ${FLASH_DIR_FA05}/data_degibbs.nii.gz ${FLASH_DIR_WARP}/data_flash.nii.gz
 
 
 echo 'Runing N4 on FLASH Data'
