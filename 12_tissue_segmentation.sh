@@ -6,31 +6,11 @@ source ./SET_VARIABLES.sh
 echo 'Copy Files to Segmentation Directory'
 
 # Copy FLASH Data to segmentation directory
-cp ${FLASH_DIR_FA05}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr1.nii.gz
-cp ${FLASH_DIR_FA12p5}/data.nii.gz  ${TISSUE_SEGMENTATION_DIR}/flash_contr2.nii.gz
-cp ${FLASH_DIR_FA25}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr3.nii.gz
-cp ${FLASH_DIR_FA50}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr4.nii.gz
-cp ${FLASH_DIR_FA80}/data.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr5.nii.gz
-
-${MRDEGIBBS3D} -force \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr1.nii.gz \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr1_degibbs.nii.gz 
-
-${MRDEGIBBS3D} -force \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr2.nii.gz \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr2_degibbs.nii.gz 
-
-${MRDEGIBBS3D} -force \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr3.nii.gz \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr3_degibbs.nii.gz 
-
-${MRDEGIBBS3D} -force \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr4.nii.gz \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr4_degibbs.nii.gz 
-
-${MRDEGIBBS3D} -force \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr5.nii.gz \
-    ${TISSUE_SEGMENTATION_DIR}/flash_contr5_degibbs.nii.gz 
+cp ${FLASH_DIR_FA05}/data_degibbs.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr1_degibbs.nii.gz
+cp ${FLASH_DIR_FA12p5}/data_degibbs.nii.gz  ${TISSUE_SEGMENTATION_DIR}/flash_contr2_degibbs.nii.gz
+cp ${FLASH_DIR_FA25}/data_degibbs.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr3_degibbs.nii.gz
+cp ${FLASH_DIR_FA50}/data_degibbs.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr4_degibbs.nii.gz
+cp ${FLASH_DIR_FA80}/data_degibbs.nii.gz    ${TISSUE_SEGMENTATION_DIR}/flash_contr5_degibbs.nii.gz
 
 
 # Copy DTI Data to segmentation directory
