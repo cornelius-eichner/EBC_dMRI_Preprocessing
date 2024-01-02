@@ -38,3 +38,6 @@ Scripted processing of the post-mortem chimpanzee diffusion MRI (dMRI) dataset a
 7. Run script '07_diff_run_topup.sh' to calculate the TopUp distortion correction. The TopUp warp field will not be applied directly to the data but combined with the other distortion fields in the dMRI processing step. 
 8. Run script '08_diff_load_prep.sh' and '09_diff_run_preprocess.sh' to load adn preprocess the dMRI data, using the previously calculated results. Make sure to have CUDA activated.
 9. Run script '10_diff_run_bedpost.sh' to run bedpostX. Make sure to have CUDA activated. 
+
+### Disclaimer
+Important Notice: This software package is intended solely for research purposes within the field of medical imaging. Any use of this software for medical diagnostics, treatment, or any non-research purposes is strictly prohibited. By accessing, downloading, or using this software, you agree to abide by these terms. Please also read Licesing information. 
